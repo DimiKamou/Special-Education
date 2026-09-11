@@ -6,9 +6,12 @@ Teachers hand it their own material. It **adds** access scaffolds without touchi
 character of the original, and it **refuses** — with a named, task-specific reason —
 the moves that would invalidate the assessment.
 
-Scope: **History, Literature, Modern Greek** and the Greek-as-L2 cohort, across **MYP and
-Γυμνάσιο**, bilingual EL/EN. A browser app with no login. **Nothing about a student is ever
-stored** — and the deterministic moves never leave the device at all.
+Scope: **History, Literature, Modern Greek**, across **MYP and Γυμνάσιο**, for a room of
+**L1 Greek / L2 English** students. A browser app with no login. **Nothing about a student is
+ever stored** — and the deterministic moves never leave the device at all.
+
+The engine is pack-agnostic: language packs, standards packs and bridge packs are data.
+Adding IGCSE or Spanish is a file, not a rewrite.
 
 > *"I did not add a pre-filled OPVL grid, because Diii requires the student to name the limitation."*
 
@@ -70,6 +73,8 @@ the premise is wrong.
 | [`docs/10-standards-packs.md`](docs/10-standards-packs.md) | MYP vs Γυμνάσιο — why the same move gets two verdicts |
 | [`docs/11-subject-playbooks.md`](docs/11-subject-playbooks.md) | History, Literature, Modern Greek, Greek-as-L2 |
 | [`docs/12-site-architecture.md`](docs/12-site-architecture.md) | It is a site: trust boundary, stack, screens, adapt vs generate |
+| [`docs/13-l1-el-l2-en.md`](docs/13-l1-el-l2-en.md) | The actual cohort: L1 Greek, L2 English — cognate bridge, command-term trap |
+| [`docs/14-going-global.md`](docs/14-going-global.md) | Three pluggable packs, one engine |
 
 ## Permanently excluded, at every version
 
