@@ -7,7 +7,8 @@ character of the original, and it **refuses** — with a named, task-specific re
 the moves that would invalidate the assessment.
 
 Scope: **History, Literature, Modern Greek** and the Greek-as-L2 cohort, across **MYP and
-Γυμνάσιο**, bilingual EL/EN. **Nothing about a student is ever stored.**
+Γυμνάσιο**, bilingual EL/EN. A browser app with no login. **Nothing about a student is ever
+stored** — and the deterministic moves never leave the device at all.
 
 > *"I did not add a pre-filled OPVL grid, because Diii requires the student to name the limitation."*
 
@@ -68,6 +69,7 @@ the premise is wrong.
 | [`docs/09-no-storage.md`](docs/09-no-storage.md) | The zero-retention architecture |
 | [`docs/10-standards-packs.md`](docs/10-standards-packs.md) | MYP vs Γυμνάσιο — why the same move gets two verdicts |
 | [`docs/11-subject-playbooks.md`](docs/11-subject-playbooks.md) | History, Literature, Modern Greek, Greek-as-L2 |
+| [`docs/12-site-architecture.md`](docs/12-site-architecture.md) | It is a site: trust boundary, stack, screens, adapt vs generate |
 
 ## Permanently excluded, at every version
 
