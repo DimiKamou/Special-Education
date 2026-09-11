@@ -1,0 +1,26 @@
+# Build sequence
+
+**WEEK 1 — falsify the premise before paying for anything.**
+- *Day 1:* repo, `0001.sql` with `tenant_id` everywhere, ULID `bid`s, and **the docx round-trip test**: parse → apply([]) → save on **20** of his real worksheets, asserting XML-canonical equality of untouched `<w:p>` after normalising rsid/proofing attributes. Ship the named-refusal list for text boxes, equations, content controls and SmartArt the same day. If this fails, the premise — "it gives you back your own file" — is false and he knows on day 1.
+- *Day 2 (morning):* deterministic analyser v0 — Greek syllabifier, the triad, sentence stats; textstat for English. Command-term lexicons hand-typed: ~60 EN with ordinal ranks, ~35 EL with `Να +` patterns. A day of list-making and the highest-ROI day in the project.
+- *Day 2 (evening):* **run the naive single-prompt baseline** on 12 golden items and record command-term downgrade rate, tier-3 retention, profile-swap Jaccard. Expect ~30–50% downgrades, ~0.7 retention, ~0.8 Jaccard. That is the before-picture and it will never be this cheap to obtain again. Same evening: **stopwatch himself differentiating 10 real tasks by hand** — without that number there is no value claim and no pricing anchor.
+- *Day 3:* the **ontology discrimination test** — for every code pair, does any card select on one and not the other? Merge every pair that fails; expect 24–31 → 12–15. Freeze `ontology/channels.v1.yaml`.
+- *Days 4–5:* 28 strategy cards in YAML. Get the ~10 zero-token render/deterministic ones working end to end first — instant, hallucination-free, and the changes teachers notice first. Ship Quick Mode (paste + one sentence → universal uplift → printable .docx) as the first thing that works.
+
+**WEEK 2 — the additive loop.**
+Class-file parser (provisional barriers allowed, ≥1 strength mandatory). Collide + 15 seed verdict rows + refusal rendering with the override→`verdict_candidate` control. `SpanEdit` strict schema, first `AnthropicAWS` call with four cache breakpoints and the `cache_read_input_tokens > 0` assertion. Additive ops only — no rewrite path yet. Validators SC/PT/CT/CR/CE/NV/EG. Export: route .docx + teacher sheet. Hash-chained trace. **End of week 2: first real classroom use, printed, handed out.**
+
+**WEEK 3 — review surface and Greek hardening.**
+Diff cards with `j/k/a/r`, pending-by-default, fidelity badge that only shows news. A6 cards, print pack with counts, `preferences.md`. Then: `EL-01` accentuation + minimal-pair guard blocking, Greeklish guard, `AG-01` Ancient Greek substring rule, and the three cards that make a φιλόλογος's Greek demonstrably better rather than shorter — `D-COLOMETRY-EL` (index-based split), `S-DENOMINALISE-EL`, `S-GENITIVE-UNWIND-EL`. Unlock the gated rewrite path with the ≤12-op cap and side-by-side paragraph rendering. Golden set 12 → 24, half Greek.
+
+**MONTH 1 (end) — instrument, then stop adding.**
+Reapplication detection and edit-distance-on-reapply computing automatically. One-prompt-per-week outcome from the fade queue. Extension lane on by default. Route proposal with teacher-assigned chips and the "was 7, now 3" number. Ablation gates in CI. Write the two-page Art. 6(4) classification memo and a one-page data-flow diagram into `/docs` — an afternoon each, and they unblock every later conversation. **Then use it for every lesson for two weeks and change nothing except what blocks him.**
+
+**WEEK 8 — the external falsification test (write it into the README before any application code).**
+Hand the laptop-local build to **two teachers at a different school** who owe him nothing: no demo, no onboarding, no support. Measure whether either exports a printed pack in week 2 unprompted. If neither does, the wedge premise is wrong and no amount of verdict or ledger work fixes it. His own usage and his IMS colleagues' usage are structurally false positives and must not be counted.
+
+**MONTH 2 — depth where the analyser is thin.**
+Second subject pack (Νεοελληνική Γλώσσα, with περίληψη as an explicit macro-rule card: πλαγιότιτλοι → connective selection → compression, which is Graham & Perin's summarisation strand at d≈0.82). spaCy `el_core_news_md` for real subordination depth. PDF text-layer ingest. Answer-leak gate against a cached claim list. Library to 40 cards. Verdict table grown from `verdict_candidates` — by now it should be 60–120 rows written by use, not by sprint. Hand the same laptop-local install to two IMS colleagues; their rejections are the dataset.
+
+**MONTH 3 — the first thing not built for him.**
+Market decision executed (see decisions). Port to Fly.io `fra`: Postgres with the `tenant_id` that has been there since `0001`, `FORCE ROW LEVEL SECURITY`, `SET LOCAL` in one `with_tenant()` wrapper, Google Workspace OIDC. Presidio replaces the regex guard. **The Access Change Log export** — per child, per task: barrier addressed, card applied, access-vs-modification classification, fade review date, teacher signature — which is the artefact IB evaluation and ΕΔΥ review both demand. Three documents only: Art. 28 DPA with a sub-processor URL, a six-page "DPIA **input** pack" explicitly labelled as input to the school's own DPIA, and the Art. 6(4) memo. ΙΚΕ incorporated and PI cover in place before any contract is signed. Still no diagnosis field, still no student names, still no SENCo workflow.
