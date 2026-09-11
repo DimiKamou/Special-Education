@@ -6,6 +6,9 @@ Teachers hand it their own material. It **adds** access scaffolds without touchi
 character of the original, and it **refuses** — with a named, task-specific reason —
 the moves that would invalidate the assessment.
 
+Scope: **History, Literature, Modern Greek** and the Greek-as-L2 cohort, across **MYP and
+Γυμνάσιο**, bilingual EL/EN. **Nothing about a student is ever stored.**
+
 > *"I did not add a pre-filled OPVL grid, because Diii requires the student to name the limitation."*
 
 That sentence is the product.
@@ -26,6 +29,20 @@ pass.
 2. **Additive, not rewriting.** Rewriting competes on the axis frontier models improve
    fastest and forces O(document) re-verification from a professional who must sign the
    result. Rewrite sits behind an explicit per-block action, capped at ≤12 ops per artefact.
+
+## Zero retention
+
+The diagnostic document never enters the app — no upload, no paste, no OCR, no code path.
+The teacher reads the γνωμάτευση they are already entitled to read and **ticks boxes**.
+Barrier profiles live in session memory and die with the tab. Only the teacher's own
+material persists, in files they own.
+
+> *"The app never sees the diagnosis. The teacher reads it and ticks what it means for this
+> lesson. Nothing about a student is stored anywhere, ever."*
+
+This deletes the DPIA, the DPA, the ΕΔΥ approval and the parent objection — and it kills
+the access-ledger and institutional-sale directions permanently. Accept the trade.
+See [`docs/09-no-storage.md`](docs/09-no-storage.md).
 
 ## Kill rule
 
@@ -48,6 +65,9 @@ the premise is wrong.
 | [`docs/06-red-team.md`](docs/06-red-team.md) | Every objection, and the honest case for not building this |
 | [`docs/07-constraints.md`](docs/07-constraints.md) | Hard constraints from the domain analysis |
 | [`docs/08-alternatives.md`](docs/08-alternatives.md) | The three directions considered and how they scored |
+| [`docs/09-no-storage.md`](docs/09-no-storage.md) | The zero-retention architecture |
+| [`docs/10-standards-packs.md`](docs/10-standards-packs.md) | MYP vs Γυμνάσιο — why the same move gets two verdicts |
+| [`docs/11-subject-playbooks.md`](docs/11-subject-playbooks.md) | History, Literature, Modern Greek, Greek-as-L2 |
 
 ## Permanently excluded, at every version
 
