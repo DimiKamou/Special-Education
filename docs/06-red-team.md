@@ -1,4 +1,11 @@
 # Red team
+
+> **ARCHIVAL.** This document is one of the inputs that produced `docs/00`–`docs/05`. It is
+> not current and must not be implemented from. Several of its positions were reversed by
+> `docs/09` (zero retention), `docs/12` (browser runtime, no database) and `docs/13` (the
+> cohort is L1 Greek / L2 English, not Greek-as-L2). Where it conflicts with a
+> higher-numbered document, the higher-numbered document wins. Kept because the reasoning
+> is worth re-reading before reversing any of it back.
 ## Strongest case against building at all
 The honest case for not building: every durable element of this product is either something a frontier model erodes within 12 months, or something better delivered as a document than as software, and the market that would pay for the rest does not have a budget line.
 

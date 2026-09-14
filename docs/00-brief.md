@@ -1,7 +1,11 @@
 # Δίοδος / Diodos
 
-**An additive scaffolder with a refusal engine and a verdict ledger.**
-Greenfield: `/home/user/Special-Education`, branch `claude/modest-mayer-kfdem1`, zero commits. Everything below is a build plan for one teacher, starting Monday.
+**An additive scaffolder with a refusal engine and a verdict pack.**
+> **Partially superseded.** Written before zero retention (`docs/09`), the browser runtime
+> (`docs/12`), the L1-Greek correction (`docs/13`) and the pack architecture (`docs/14`).
+> Its reframe, its pedagogical positions and its honest case against building are current.
+> Its storage model, its stack, its ledger, its market framing and its "six things only he
+> can decide" are not — see `docs/15-backlog.md`.
 
 ---
 

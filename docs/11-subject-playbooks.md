@@ -95,10 +95,12 @@ isolated grammar instruction at d ≈ −0.32 on writing quality. Hard-code it
 
 ---
 
-## Greek as a second language (the quiet majority)
+## Greek as a second language — RETRACTED, see `docs/13`
 
-In a Greek international school this cohort is routinely larger than the SEN cohort and
-gets almost nothing. It is a **different barrier profile**, not a milder one:
+**This section described the wrong cohort.** `docs/13` corrects it: the students are L1
+Greek / L2 English, so the bridge runs EL→EN, not the reverse. Kept only because the
+*shape* of the argument holds for any future `en→el` bridge pack — a second-language
+barrier is a different profile, not a milder one:
 
 - Needs **morphological** support — case endings, verb aspect, article agreement — not
   decoding support.
@@ -108,15 +110,15 @@ gets almost nothing. It is a **different barrier profile**, not a milder one:
 - Bilingual glossing (EL term → EN gloss, term kept) is the highest-yield move and is
   ✅ everywhere except Language Acquisition Reading tasks.
 
-If this cohort is the larger one in your rooms, it should drive v1 and the product is
-called something other than a special-education tool.
+The live version of this argument is in [`docs/13-l1-el-l2-en.md`](13-l1-el-l2-en.md):
+the cognate bridge, the false-friend table and the command-term trap, running EL→EN.
 
 ---
 
 ## The shared substrate
 
-Every move above reduces to seven operations on a document, which is why one engine covers
-three subjects:
+Every move above reduces to **seven operations** on a document, which is why one engine
+covers three subjects:
 
 1. **Gloss in place** — add, never replace
 2. **Colometry / segmentation** — index-based splits, characters never retyped
@@ -126,5 +128,8 @@ three subjects:
 6. **Discourse stems** — structure without content
 7. **Render directives** — spacing, line length, font size, one-question-per-page
 
-Ten of these cost zero model tokens. Ship those first: they are always correct, always
-specific, and they carry the habit while the generative path is still shallow.
+Seven operations, but **ten zero-token strategy cards** — the render directives unpack into
+four (spacing, line length, font size, one-question-per-page). The ten are not yet
+enumerated anywhere, which blocks the first thing that ships; naming them is a week-2 item
+in `docs/04`. Ship them first: they are always correct, always specific, and they carry the
+habit while the generative path is still shallow.

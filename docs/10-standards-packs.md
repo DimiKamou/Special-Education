@@ -48,7 +48,7 @@ move flips.
   an I&S task. This single pair is the clearest demonstration that the verdict cannot be
   keyed on the strategy alone.
 
-**Language Acquisition (for the EAL / Greek-as-L2 cohort)**
+**Language Acquisition**
 - A Listening, B Reading, C Speaking, D Writing. Comprehension support on a Reading task
   is the construct. The same support on an I&S task is access. Phase level determines the
   ceiling, so an "extension" here means a higher phase descriptor, not more questions.
@@ -95,7 +95,7 @@ Greek and English are separate barrier vectors for the same child. `el:decode.ra
 - Greek command terms are not imperatives. They are periphrastic «Να + subjunctive»
   (`Να αξιολογήσετε`, `Να τεκμηριώσετε`) plus bare nominals (`Αιτιολόγηση`, `Σχολιασμός`).
   An extractor that matches imperatives finds nothing.
-- In an international school the **L2 cohort is usually larger than the SEN cohort.** If
-  that holds at IMS, bilingual glossing and register scaffolding is a bigger v1 lever than
-  any SEN scaffold, and the product framing is *academic language access*, not
-  *special education*.
+- The cohort is **L1 Greek, L2 English** (`docs/13`), so the bridge runs EL→EN: cognates,
+  false friends and bilingual command-term unpacking. Bilingual glossing is plausibly a
+  bigger v1 lever than any SEN scaffold, which makes the framing *academic language access*
+  rather than *special education*.

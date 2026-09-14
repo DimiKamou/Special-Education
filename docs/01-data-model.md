@@ -1,68 +1,89 @@
 # Data model
 
-```sql
--- SQLite v1 (WAL). tenant_id present from migration 0001 on EVERY table so the
--- month-6 Postgres+FORCE RLS port is mechanical. No table anywhere holds a name,
--- a date of birth, or a diagnosis.
+> **Rewritten.** The original version of this section was SQLite DDL — `runs`, `ops`,
+> `tenant_id`, `prev_hash`/`row_hash`, `reapplied_from_op_id` — plus a `classes/*.class`
+> file holding student initials, dated evidence and a ΚΕΔΑΣΥ arrangement with an expiry,
+> described as "the entire learner store". `docs/09` rules out any student record,
+> identifier or pseudonymised handle; `docs/10` forbids storing the protocol number or the
+> date; `docs/12` removes the database entirely. **Both are deleted.** That class file was
+> the single document a DPO or an inclusion lead would have quoted back at you.
 
--- 0001_init.sql ------------------------------------------------------------
-CREATE TABLE runs (
-  run_id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL DEFAULT 'local',
-  doc_sha256 TEXT NOT NULL, class_file_sha256 TEXT,
-  mode TEXT NOT NULL,          -- teaching | formative | summative_internal | summative_external
-  curriculum TEXT NOT NULL,    -- ib_myp | gr_national
-  subject_group TEXT, declared_criteria TEXT,        -- JSON: ['B','D'] — 3 clicks, never inferred
-  item_strand_tags TEXT,       -- JSON, REQUIRED only when mode='summative_internal'
-  ontology_version TEXT, library_version TEXT, analyser_version TEXT,
-  prompt_bundle_version TEXT, verdict_pack_version TEXT,
-  model_id TEXT, model_region TEXT,                  -- 'eu-central-1'
-  plan_json TEXT, refused_json TEXT, validation_json TEXT,
-  tokens_in INT, tokens_cached INT, tokens_out INT, cost_eur REAL, latency_ms INT,
-  exported_at TEXT, printed INT DEFAULT 0,
-  created_at TEXT NOT NULL, prev_hash TEXT NOT NULL, row_hash TEXT NOT NULL
-);
+## What persists, and where
 
-CREATE TABLE ops (
-  op_id TEXT PRIMARY KEY, run_id TEXT NOT NULL, tenant_id TEXT DEFAULT 'local',
-  strategy_id TEXT NOT NULL,          -- set by CODE, echoed by model, verified on return
-  bid TEXT NOT NULL,                  -- stable ULID of the block it touched
-  kind TEXT NOT NULL,                 -- additive | rewrite | render
-  barrier_codes TEXT NOT NULL,        -- JSON
-  demand_codes TEXT NOT NULL,
-  quoted_span TEXT NOT NULL,          -- verbatim slice of HIS text — renders on the change card
-  payload TEXT NOT NULL,              -- the SpanEdit
-  access_delta INT NOT NULL, demand_delta INT NOT NULL DEFAULT 0,
-  fade_class TEXT NOT NULL,           -- atl_taught | permanent_arrangement | universal_design
-  provisional INT NOT NULL DEFAULT 0, -- 1 = barrier was unevidenced; see permission gate
-  decision TEXT, edited_text TEXT, decided_at TEXT,
-  -- the outcome signal that is actually capturable:
-  reapplied_from_op_id TEXT,          -- set when the same card+student-set recurs on a later doc
-  edit_distance_on_reapply REAL
-);
+| | Store | Holds |
+|---|---|---|
+| **Session** | JS heap, dies with the tab | the barrier vector — deliberately not recoverable |
+| **Device** | IndexedDB, one object store | the document, the demand analysis, declared mode/criteria, op decisions, your glossaries, your verdict candidates, URW counters keyed by *typed* `class_handle` |
+| **Repo** | pack files, versioned | ontology, strategy cards, verdicts, command terms, bridge pack — all about **tasks**, never about students |
 
-CREATE TABLE verdicts (               -- SCHOOL-LOCAL POLICY, not global IP. Seeded ~15 rows.
-  tenant_id TEXT DEFAULT 'local',
-  strategy_id TEXT NOT NULL,
-  standards_pack TEXT NOT NULL,       -- 'ib_myp_2026'
-  subject_group TEXT NOT NULL,
-  strand_id TEXT NOT NULL,            -- IDENTIFIER ONLY. Never paraphrased IB descriptor text.
-  product_type TEXT NOT NULL,         -- essay | source_response | oral | data_response | *
-  assessed_verb TEXT NOT NULL,        -- evaluate | analyse | justify | * (from the clarification)
-  verdict TEXT NOT NULL CHECK (verdict IN ('legal','conditional','invalidating','criteria_modification')),
-  rationale TEXT NOT NULL,            -- OUR words, never IB's
-  authored_by TEXT, authored_on TEXT, source TEXT,  -- 'seed' | 'override' | 'coordinator'
-  pack_version INT NOT NULL,
-  PRIMARY KEY (tenant_id, strategy_id, standards_pack, subject_group,
-               strand_id, product_type, assessed_verb, pack_version)
-);
--- DEFAULTS: missing row → 'conditional' (flag + proceed) on teaching/formative;
---           missing row → 'invalidating' (fail closed) on summative_internal.
-CREATE TABLE verdict_candidates (     -- THE AUTHORING QUEUE. Every refusal override lands here.
-  id TEXT PRIMARY KEY, tenant_id TEXT, run_id TEXT, strategy_id TEXT,
-  strand_id TEXT, product_type TEXT, assessed_verb TEXT,
-  teacher_reason TEXT NOT NULL, created_at TEXT, promoted_to_verdict INT DEFAULT 0
-);
+The one genuinely good rule from the deleted class file survives as a UI gate rather than a
+parser rule: **the Plan screen does not unlock until at least one strength chip is set.**
+A profile that is a list of deficits produces deficit output.
+
+## The session barrier vector
+
+```ts
+// Lives in memory. No name, no initials, no identifier, no evidence dates, no arrangements
+// with protocol numbers. There is no field for any of them.
+type RoomProfile = Readonly<{
+  class_handle: string;                       // typed by the teacher: "Γ2", "MYP4B". Not a roster key.
+  barriers: ReadonlyArray<{
+    code: string;
+    lang: 'el' | 'en' | 'grc' | null;         // null only for codes flagged language_bound: false
+    severity: 1 | 2 | 3;
+  }>;
+  strengths: ReadonlyArray<string>;           // >= 1, enforced by the UI gate
+  arrangements_in_force: ReadonlyArray<string>;  // ticked per session: 'oral_assessment', 'extra_time'
+  counts?: ReadonlyArray<{ pattern: string; n: number }>;  // "3 like this" — anonymous, for route sizing
+}>;
 ```
+
+`arrangements_in_force` is a tick, not a record: it constrains what the app proposes and
+prints on the teacher copy. Nothing is stored about who holds it or who issued it.
+
+## The verdict pack — the only thing that compounds
+
+Not a table. A versioned data file, about tasks and criteria, containing zero personal data.
+
+```yaml
+# packs/verdicts/myp.is.seed.yaml
+pack_version: 1
+standards_pack: ib_myp_2026
+rows:
+  - strategy_id: S-OPVL-GRID-BLANK
+    subject_group: individuals_and_societies
+    strand_id: myp.is.D.iii          # IDENTIFIER ONLY. Never paraphrased IB descriptor text.
+    product_type: source_response
+    assessed_verb: evaluate
+    verdict: legal                   # legal | conditional | invalidating
+    rationale: >                     # OUR words, always
+      The grid is a layout aid. The student still names the limitation, which is what
+      Diii assesses.
+    authored_by: DK
+    authored_on: 2026-09-20
+    source: seed                     # seed | override | coordinator
+```
+
+**Three defects to fix before authoring a single row** (see `docs/15-backlog.md`):
+
+1. **No canonical strand-identifier form.** The docs write `Diii`, `D-ii`, `Ai` and `A–D`
+   for the same thing. Pick `myp.is.D.iii` and use it everywhere.
+2. **`strand_id` is unsatisfiable for Γυμνάσιο**, which has no criteria and no strands. The
+   Γυμνάσιο pack keys on arrangement and task type instead.
+3. **`assessed_verb` is in the key and no screen on the adapt path collects it.** Derive it
+   from the command term the extractor already found, and confirm on ≤4 items.
+
+**Defaults:** a missing row is `conditional` (flag and proceed) on teaching and formative;
+`invalidating` (fail closed) on `summative_internal`.
+
+**Overrides are the authoring queue.** Every refusal renders an override control; taking it
+writes a `verdict_candidate` to IndexedDB with your typed reason, plus a *"download my
+verdict candidates"* button. With no database, the queue is a file you own — which is better
+than a table you cannot see.
+
+**`criteria_modification` is cut from v1.** It was gated to coordinator level in three
+documents and there is no login, no identity and no role model to gate on. A fourth verdict
+value with an unenforceable gate is worse than its absence.
 
 ```yaml
 # ontology/channels.v1.yaml — FROZEN week 1, AFTER the day-3 discrimination test.
@@ -79,17 +100,6 @@ affect:    [evaluative.threat, predictability.need]     # text_transform_allowed
                                                         # at card-load time, not in a prompt
 ```
 
-```
-# classes/9B-istoria.class  — the entire learner store. A text file in a private git repo.
-class: 9B Ιστορία | programme: MYP4 | loi: en | roll: 24
-
-ΝΚ   el:decode.rate=2 [obs 2026-09-03]
-     el:encoding.spelling=3 [report 2025-11-12]
-     wm.verbal=2                                   # no [evidence] → PROVISIONAL, still generates
-     + oral.fluency, visual.reasoning              # >=1 strength or the line fails to parse
-     arr: KEDASY:oral_exam:2027-06-30
-     arr: SCHOOL:laptop:2027-06-30
-```
 
 ```ts
 // The model's ONLY output shape. A rewritten document is a schema rejection.

@@ -1,6 +1,6 @@
 # Δίοδος / Diodos
 
-An additive scaffolder with a refusal engine and a verdict ledger.
+An additive scaffolder with a refusal engine and a verdict pack.
 
 Teachers hand it their own material. It **adds** access scaffolds without touching a
 character of the original, and it **refuses** — with a named, task-specific reason —
@@ -19,9 +19,15 @@ That sentence is the product.
 
 ## Status
 
-Design phase. Zero application code. Nothing below is committed to until the
-premise-falsification tests in [`docs/04-build-sequence.md`](docs/04-build-sequence.md)
-pass.
+Design phase. Zero application code, zero data assets. Nothing below is committed to until
+the week-1 premise-falsification tests in
+[`docs/04-build-sequence.md`](docs/04-build-sequence.md) pass — each one has a stated
+threshold, and three of the five can kill the project.
+
+**Document precedence.** `docs/00`–`08` predate three scope changes and were never edited to
+match. The rule: **09 > 00–08 on storage · 12 > 00–08 on stack and trust boundary ·
+13 > 10/11/00 on cohort · 14 > 03/04 on layout.** `docs/03` and `docs/04` have been
+rewritten; `docs/06`, `07` and `08` are marked archival.
 
 ## The two reframes
 
@@ -75,6 +81,7 @@ the premise is wrong.
 | [`docs/12-site-architecture.md`](docs/12-site-architecture.md) | It is a site: trust boundary, stack, screens, adapt vs generate |
 | [`docs/13-l1-el-l2-en.md`](docs/13-l1-el-l2-en.md) | The actual cohort: L1 Greek, L2 English — cognate bridge, command-term trap |
 | [`docs/14-going-global.md`](docs/14-going-global.md) | Three pluggable packs, one engine |
+| [`docs/15-backlog.md`](docs/15-backlog.md) | **Ranked backlog. Start here to build.** |
 
 ## Permanently excluded, at every version
 

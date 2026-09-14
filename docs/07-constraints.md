@@ -1,5 +1,12 @@
 # Hard constraints (from the seven-lens landscape pass)
 
+> **ARCHIVAL.** This document is one of the inputs that produced `docs/00`–`docs/05`. It is
+> not current and must not be implemented from. Several of its positions were reversed by
+> `docs/09` (zero retention), `docs/12` (browser runtime, no database) and `docs/13` (the
+> cohort is L1 Greek / L2 English, not Greek-as-L2). Where it conflicts with a
+> higher-numbered document, the higher-numbered document wins. Kept because the reasoning
+> is worth re-reading before reversing any of it back.
+
 Non-negotiables any design must honour or explicitly override.
 
 - Diagnosis labels must never key any logic. A label may only adjust priors over a barrier vector; every emitted move traces to a barrier code that has at least one dated evidence entry (standardised score, work sample, teacher rating, or observation). No evidence, no move.
