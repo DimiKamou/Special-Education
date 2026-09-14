@@ -77,7 +77,7 @@ the premise is wrong.
 | [`docs/08-alternatives.md`](docs/08-alternatives.md) | The three directions considered and how they scored |
 | [`docs/09-no-storage.md`](docs/09-no-storage.md) | The zero-retention architecture |
 | [`docs/10-standards-packs.md`](docs/10-standards-packs.md) | MYP vs Γυμνάσιο — why the same move gets two verdicts |
-| [`docs/11-subject-playbooks.md`](docs/11-subject-playbooks.md) | History, Literature, Modern Greek, Greek-as-L2 |
+| [`docs/11-subject-playbooks.md`](docs/11-subject-playbooks.md) | History, Literature, Modern Greek — per-move verdicts |
 | [`docs/12-site-architecture.md`](docs/12-site-architecture.md) | It is a site: trust boundary, stack, screens, adapt vs generate |
 | [`docs/13-l1-el-l2-en.md`](docs/13-l1-el-l2-en.md) | The actual cohort: L1 Greek, L2 English — cognate bridge, command-term trap |
 | [`docs/14-going-global.md`](docs/14-going-global.md) | Three pluggable packs, one engine |
