@@ -1,0 +1,1341 @@
+<title>Δίοδος</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root{
+  --paper:#eef0f2; --surface:#ffffff; --surface-2:#f7f8f9;
+  --ink:#16201f; --ink-2:#55676a; --ink-3:#849699;
+  --rule:#d2d9dc; --rule-2:#e4e9eb;
+  --accent:#1f5f6b; --accent-soft:#e2eef0; --accent-ink:#134048;
+  --rubric:#a8322b; --rubric-soft:#f8e8e6;
+  --legal:#2f6b4a; --legal-soft:#e6f0ea;
+  --cond:#8a6410; --cond-soft:#f7efdd;
+  --mark:#fdf0a8; --mark-2:#cfe8ee; --mark-3:#e6dcf2;
+  --shadow:0 1px 2px rgba(22,32,31,.06),0 8px 24px -12px rgba(22,32,31,.14);
+  --f-doc:"Literata",Georgia,"Times New Roman",serif;
+  --f-ui:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0f1516; --surface:#151d1e; --surface-2:#1a2325;
+  --ink:#e7edec; --ink-2:#9fb2b4; --ink-3:#71878a;
+  --rule:#273234; --rule-2:#1f292b;
+  --accent:#63b6c3; --accent-soft:#16333a; --accent-ink:#9dd6e0;
+  --rubric:#e58278; --rubric-soft:#3a1f1c;
+  --legal:#7cc39b; --legal-soft:#162e23;
+  --cond:#d6ad5c; --cond-soft:#332a14;
+  --mark:#5d5320; --mark-2:#1d4048; --mark-3:#342a4a;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+}}
+:root[data-theme="dark"]{
+  --paper:#0f1516; --surface:#151d1e; --surface-2:#1a2325;
+  --ink:#e7edec; --ink-2:#9fb2b4; --ink-3:#71878a;
+  --rule:#273234; --rule-2:#1f292b;
+  --accent:#63b6c3; --accent-soft:#16333a; --accent-ink:#9dd6e0;
+  --rubric:#e58278; --rubric-soft:#3a1f1c;
+  --legal:#7cc39b; --legal-soft:#162e23;
+  --cond:#d6ad5c; --cond-soft:#332a14;
+  --mark:#5d5320; --mark-2:#1d4048; --mark-3:#342a4a;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-doc);font-weight:600;text-wrap:balance;margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- chrome ---------- */
+.shell{display:flex;flex-direction:column;min-height:100%}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule)}
+.topbar-in{max-width:1220px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:9px;font-family:var(--f-doc);font-size:19px;font-weight:700;letter-spacing:-.01em}
+.brand small{font-family:var(--f-ui);font-size:10.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.steps{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;border:1px solid transparent;background:none;cursor:pointer;color:var(--ink-3);font-size:12.5px;font-weight:500}
+.step:disabled{opacity:.42;cursor:not-allowed}
+.step .n{font-family:var(--f-mono);font-size:10.5px;width:17px;height:17px;display:grid;place-items:center;border-radius:50%;border:1px solid currentColor}
+.step[aria-current="true"]{background:var(--surface);border-color:var(--rule);color:var(--ink);box-shadow:var(--shadow)}
+.step.done{color:var(--accent)}
+.iconbtn{background:var(--surface);border:1px solid var(--rule);border-radius:7px;padding:5px 9px;cursor:pointer;font-size:12px;color:var(--ink-2)}
+.iconbtn:hover{border-color:var(--accent);color:var(--accent)}
+main{flex:1;max-width:1220px;width:100%;margin:0 auto;padding-inline:16px;padding-block:24px 64px}
+.panel{display:none}
+.panel.on{display:block;animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.lede{max-width:66ch;color:var(--ink-2);font-size:14.5px;margin:0 0 20px}
+.eyebrow{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:7px}
+.h-row{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.h-row h2{font-size:24px;letter-spacing:-.015em}
+
+/* ---------- start ---------- */
+.start-grid{display:grid;grid-template-columns:1.25fr .85fr;gap:20px;align-items:start}
+@media(max-width:860px){.start-grid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:18px}
+.drop{border:1.5px dashed var(--rule);border-radius:12px;background:var(--surface);padding:26px 20px;text-align:center;transition:border-color .15s,background .15s}
+.drop.hot{border-color:var(--accent);background:var(--accent-soft)}
+.drop h3{font-size:17px;margin-bottom:5px}
+.drop p{color:var(--ink-2);font-size:13px;margin:0 0 14px}
+.btn{background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:8px;padding:8px 15px;font-size:13.5px;font-weight:500;cursor:pointer}
+:root[data-theme="dark"] .btn,:root:not([data-theme="light"]) .btn{color:#08191c}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .btn{color:#fff}}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent);filter:none}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.btn.sm{padding:5px 11px;font-size:12.5px}
+textarea{width:100%;min-height:150px;border:1px solid var(--rule);border-radius:9px;padding:12px;font-family:var(--f-doc);font-size:14.5px;line-height:1.6;background:var(--surface-2);color:var(--ink);resize:vertical}
+.demos{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.demo{display:block;width:100%;text-align:left;background:var(--surface-2);border:1px solid var(--rule-2);border-radius:9px;padding:11px 13px;cursor:pointer}
+.demo:hover{border-color:var(--accent);background:var(--accent-soft)}
+.demo b{display:block;font-family:var(--f-doc);font-size:14.5px;font-weight:600;margin-bottom:2px}
+.demo span{font-size:12px;color:var(--ink-2)}
+.setting{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.setting>label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.seg{display:flex;gap:0;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.seg button{flex:1;background:var(--surface);border:0;padding:7px 8px;font-size:12.5px;cursor:pointer;color:var(--ink-2);border-right:1px solid var(--rule)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .seg button[aria-pressed="true"]{color:#08191c}
+select{border:1px solid var(--rule);border-radius:8px;padding:7px 9px;background:var(--surface);color:var(--ink);font:inherit;font-size:13px;width:100%}
+.note{font-size:12px;color:var(--ink-3);line-height:1.45;margin-top:6px}
+.privacy{border-left:2px solid var(--accent);padding:2px 0 2px 12px;font-size:12.5px;color:var(--ink-2);margin-top:14px}
+.privacy b{color:var(--ink)}
+
+/* ---------- apparatus (read + plan) ---------- */
+.appar{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:22px;align-items:start}
+@media(max-width:960px){.appar{grid-template-columns:1fr}}
+.doc{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:26px 30px;box-shadow:var(--shadow)}
+.doc .blk{font-family:var(--f-doc);font-size:15.5px;line-height:1.72;margin:0 0 14px;max-width:64ch;position:relative;scroll-margin-top:90px;border-radius:4px;padding:2px 4px;margin-left:-4px}
+.doc .blk.sel{background:var(--accent-soft)}
+.doc .blk[data-kind="heading"]{font-size:19px;font-weight:700;line-height:1.3;margin-top:4px}
+.doc .blk[data-kind="source"]{border-left:2px solid var(--rule);padding-left:14px;margin-left:0;color:var(--ink)}
+.doc .blk[data-kind="instruction"]{font-family:var(--f-ui);font-size:14px;color:var(--ink-2)}
+.doc .blk[data-kind="question"]{font-family:var(--f-ui);font-size:14px;padding-left:4px}
+.doc .blk[data-kind="note"]{font-family:var(--f-ui);font-size:12.5px;color:var(--ink-3)}
+mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
+mark.ct{background:var(--mark-2);box-shadow:inset 0 -2px 0 var(--accent)}
+mark.t3{background:var(--mark-3)}
+mark.gen{background:none;box-shadow:inset 0 -2px 0 var(--rubric)}
+mark.nom{background:none;box-shadow:inset 0 -2px 0 var(--cond)}
+mark.logio{background:none;box-shadow:inset 0 -2px 0 0 var(--ink-3);text-decoration:underline wavy var(--ink-3) 1px;text-underline-offset:3px}
+.rail{display:flex;flex-direction:column;gap:11px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 74px)}
+@media(max-width:960px){.rail{position:static}}
+.rail-h{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.railscroll{display:flex;flex-direction:column;gap:9px;max-height:calc(100vh - 170px);overflow-y:auto;padding-right:2px}
+@media(max-width:960px){.railscroll{max-height:none}}
+
+/* metric tiles */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:9px;margin-bottom:16px}
+.metric{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:11px 12px}
+.metric .k{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:3px}
+.metric .v{font-family:var(--f-mono);font-size:21px;font-weight:500;line-height:1.1;font-variant-numeric:tabular-nums}
+.metric .s{font-size:11.5px;color:var(--ink-2);margin-top:2px}
+.metric.hi{border-color:var(--cond);background:var(--cond-soft)}
+.metric.hi .v{color:var(--cond)}
+
+.finding{background:var(--surface);border:1px solid var(--rule);border-left:2px solid var(--cond);border-radius:9px;padding:11px 12px;cursor:pointer;text-align:left;width:100%}
+.finding:hover{border-color:var(--accent);border-left-color:var(--accent)}
+.finding .ft{font-size:12px;font-weight:600;margin-bottom:4px;display:flex;justify-content:space-between;gap:8px}
+.finding .ft em{font-family:var(--f-mono);font-style:normal;font-size:11px;color:var(--ink-3);font-weight:400}
+.finding .fq{font-family:var(--f-doc);font-size:12.5px;color:var(--ink-2);line-height:1.5}
+.finding .fw{font-size:11.5px;color:var(--ink-3);margin-top:5px}
+
+/* ---------- room ---------- */
+.room-grid{display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start}
+@media(max-width:960px){.room-grid{grid-template-columns:1fr}}
+.chgroup{margin-bottom:18px}
+.chgroup h3{font-family:var(--f-ui);font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:9px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{background:var(--surface);border:1px solid var(--rule);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:7px;color:var(--ink-2)}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink);font-weight:500}
+.chip .sev{font-family:var(--f-mono);font-size:10px;background:var(--accent);color:#fff;width:15px;height:15px;border-radius:50%;display:none;place-items:center}
+:root[data-theme="dark"] .chip .sev{color:#08191c}
+.chip[aria-pressed="true"] .sev{display:grid}
+.chip .lang{font-family:var(--f-mono);font-size:9.5px;opacity:.65;text-transform:uppercase}
+.chip.strength[aria-pressed="true"]{background:var(--legal-soft);border-color:var(--legal);color:var(--legal)}
+.chip.arr[aria-pressed="true"]{background:var(--cond-soft);border-color:var(--cond);color:var(--cond)}
+.warnbox{background:var(--rubric-soft);border:1px solid var(--rubric);border-radius:9px;padding:11px 13px;font-size:12.5px;color:var(--ink);margin-top:11px;line-height:1.5}
+.warnbox b{color:var(--rubric)}
+.gate{background:var(--cond-soft);border:1px solid var(--cond);border-radius:9px;padding:10px 13px;font-size:12.5px;color:var(--ink);line-height:1.5}
+.qline{font-size:12px;color:var(--ink-3);margin:-4px 0 9px}
+
+/* ---------- plan ---------- */
+.move{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:12px 13px;border-left:2px solid var(--legal)}
+.move.rejected{opacity:.5}
+.move-h{display:flex;justify-content:space-between;align-items:flex-start;gap:9px;margin-bottom:6px}
+.move-h b{font-size:13px;font-weight:600;line-height:1.3}
+.tag{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.04em;padding:2px 6px;border-radius:4px;background:var(--surface-2);border:1px solid var(--rule-2);color:var(--ink-3);white-space:nowrap;text-transform:uppercase}
+.tag.free{background:var(--legal-soft);border-color:var(--legal);color:var(--legal)}
+.move p{font-size:12.5px;color:var(--ink-2);margin:0 0 7px;line-height:1.5}
+.move .quoted{font-family:var(--f-doc);font-size:12.5px;color:var(--ink);background:var(--surface-2);border-left:2px solid var(--rule);padding:6px 9px;border-radius:0 5px 5px 0;margin-bottom:7px;line-height:1.5}
+.move .why{font-size:11.5px;color:var(--ink-3);margin-bottom:8px}
+.move .why b{color:var(--ink-2);font-weight:500}
+.move-a{display:flex;gap:6px}
+.move-a button{flex:1;border:1px solid var(--rule);background:var(--surface-2);border-radius:6px;padding:5px;font-size:12px;cursor:pointer;color:var(--ink-2)}
+.move-a button[aria-pressed="true"].acc{background:var(--legal);border-color:var(--legal);color:#fff}
+.move-a button[aria-pressed="true"].rej{background:var(--ink-3);border-color:var(--ink-3);color:#fff}
+
+.refusal{background:var(--rubric-soft);border:1px solid var(--rubric);border-left-width:3px;border-radius:9px;padding:12px 13px}
+.refusal .rh{display:flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--rubric);font-weight:700;margin-bottom:6px}
+.refusal .rt{font-size:13px;font-weight:600;margin-bottom:5px}
+.refusal .rr{font-family:var(--f-doc);font-size:13px;line-height:1.55;color:var(--ink);margin-bottom:8px}
+.refusal .rmeta{font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3);margin-bottom:9px}
+.refusal .never{font-size:11.5px;color:var(--rubric);font-weight:600}
+.override{width:100%;border:1px solid var(--rubric);background:transparent;color:var(--rubric);border-radius:6px;padding:5px;font-size:12px;cursor:pointer}
+.override:hover{background:var(--rubric);color:#fff}
+.ovform{margin-top:8px}
+.ovform input{width:100%;border:1px solid var(--rule);border-radius:6px;padding:6px 8px;font:inherit;font-size:12.5px;background:var(--surface);color:var(--ink);margin-bottom:6px}
+
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--rule);margin-bottom:16px;flex-wrap:wrap}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:8px 12px;font-size:13px;cursor:pointer;color:var(--ink-3);margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab .ct{font-family:var(--f-mono);font-size:10.5px;margin-left:5px;opacity:.8}
+
+/* ---------- export ---------- */
+.exp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-bottom:22px}
+.expcard{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:9px}
+.expcard h3{font-size:15px}
+.expcard p{font-size:12.5px;color:var(--ink-2);margin:0;flex:1;line-height:1.5}
+.out{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:30px 34px;box-shadow:var(--shadow)}
+.out h1{font-family:var(--f-doc);font-size:22px;margin-bottom:4px}
+.out .meta{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--rule-2)}
+.out .blk{font-family:var(--f-doc);font-size:15.5px;line-height:1.75;margin:0 0 15px;max-width:64ch}
+.out .blk[data-kind="heading"]{font-size:18px;font-weight:700}
+.out .blk[data-kind="source"]{border-left:2px solid var(--rule);padding-left:14px}
+.out .blk[data-kind="instruction"],.out .blk[data-kind="question"]{font-family:var(--f-ui);font-size:14px}
+.ins{border:1px solid var(--accent);border-left-width:3px;background:var(--accent-soft);border-radius:0 8px 8px 0;padding:11px 13px;margin:0 0 15px;max-width:64ch;font-family:var(--f-ui);font-size:13px;line-height:1.55}
+.ins .it{font-size:10px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;color:var(--accent-ink);margin-bottom:5px}
+.ins table{border-collapse:collapse;width:100%;margin-top:7px;font-size:12.5px}
+.ins td,.ins th{border:1px solid var(--accent);padding:7px 8px;text-align:left;vertical-align:top}
+.ins th{font-weight:600;background:color-mix(in srgb,var(--accent) 12%,transparent);font-size:11.5px}
+.ins td{height:34px}
+.ins ul{margin:5px 0 0;padding-left:18px}
+.ins li{margin-bottom:3px}
+.ins .gl{display:flex;gap:8px;padding:3px 0;border-bottom:1px dotted color-mix(in srgb,var(--accent) 35%,transparent)}
+.ins .gl:last-child{border-bottom:0}
+.ins .gl b{font-family:var(--f-doc);min-width:110px;font-weight:600}
+.colo{font-family:var(--f-doc);font-size:15.5px;line-height:1.95;max-width:64ch;margin:0 0 15px;padding-left:14px;border-left:2px solid var(--rule)}
+.colo span{display:block}
+.teacher-only{border:1px dashed var(--ink-3);border-radius:8px;padding:11px 13px;margin:0 0 15px;max-width:64ch;font-family:var(--f-ui);font-size:12px;color:var(--ink-2);line-height:1.5}
+.teacher-only .tt{font-size:10px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;color:var(--ink-3);margin-bottom:5px}
+.footerline{margin-top:24px;padding-top:11px;border-top:1px solid var(--rule-2);font-size:10.5px;color:var(--ink-3);font-family:var(--f-mono)}
+
+table.ref{width:100%;border-collapse:collapse;font-size:12.5px}
+table.ref th,table.ref td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule-2);vertical-align:top}
+table.ref th{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+table.ref tbody tr:hover{background:var(--surface-2)}
+.wrap-x{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:6px 14px}
+.pill{font-family:var(--f-mono);font-size:10px;padding:2px 7px;border-radius:999px;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
+.pill.legal{background:var(--legal-soft);color:var(--legal)}
+.pill.conditional{background:var(--cond-soft);color:var(--cond)}
+.pill.invalidating{background:var(--rubric-soft);color:var(--rubric)}
+.empty{text-align:center;padding:36px 20px;color:var(--ink-3);font-size:13.5px;border:1px dashed var(--rule);border-radius:12px;background:var(--surface-2)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 20px);background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:999px;font-size:13px;z-index:200;box-shadow:var(--shadow)}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px;padding-top:16px;border-top:1px solid var(--rule)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media print{
+  .topbar,.rail,.actions,.tabs,.no-print{display:none!important}
+  body{background:#fff}
+  .out,.doc{border:0;box-shadow:none;padding:0}
+  .ins,.colo,.teacher-only{break-inside:avoid}
+  @page{size:A4;margin:18mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+
+<div class="shell">
+<header class="topbar"><div class="topbar-in">
+  <div class="brand">Δίοδος <small>Diodos</small></div>
+  <nav class="steps" id="steps" aria-label="Stages">
+    <button class="step" data-go="0"><span class="n">1</span>Start</button>
+    <button class="step" data-go="1" disabled><span class="n">2</span>Read</button>
+    <button class="step" data-go="2" disabled><span class="n">3</span>The room</button>
+    <button class="step" data-go="3" disabled><span class="n">4</span>Plan</button>
+    <button class="step" data-go="4" disabled><span class="n">5</span>Export</button>
+  </nav>
+  <button class="iconbtn" id="reference">Reference</button>
+  <button class="iconbtn" id="themetog" aria-label="Toggle theme">◐</button>
+</div></header>
+
+<main>
+
+<!-- ============ 1 · START ============ -->
+<section class="panel on" id="p0">
+  <div class="h-row"><h2>Your material, scaffolded — never rewritten.</h2></div>
+  <p class="lede">Drop in a worksheet you already made. Δίοδος measures what makes it hard, adds access scaffolds beside your text without altering a character of it, and refuses — by name — the moves that would invalidate the assessment.</p>
+
+  <div class="start-grid">
+    <div>
+      <div class="drop" id="drop">
+        <h3>Drop a .docx here</h3>
+        <p>Parsed in your browser. Nothing is uploaded.</p>
+        <button class="btn" id="pick">Choose a file</button>
+        <input type="file" id="file" accept=".docx" hidden>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <div class="eyebrow">or paste the text</div>
+        <textarea id="paste" placeholder="Paste a source, a task, an extract…"></textarea>
+        <div style="display:flex;gap:9px;margin-top:10px;flex-wrap:wrap">
+          <button class="btn" id="usepaste">Analyse this</button>
+          <button class="btn ghost sm" id="clearpaste">Clear</button>
+        </div>
+      </div>
+      <div class="privacy">
+        <b>The app never sees a diagnosis.</b> There is no upload field for a γνωμάτευση, no OCR, no code path. You read the report you are already entitled to read and tick what it means for this lesson. Nothing about a student is stored anywhere, ever — the barrier profile lives in this tab and dies when you close it.
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="setting">
+          <label for="pack">Curriculum</label>
+          <div class="seg" id="pack" role="group">
+            <button data-v="ib_myp" aria-pressed="true">MYP</button>
+            <button data-v="gymnasio_el" aria-pressed="false">Γυμνάσιο</button>
+          </div>
+          <div class="note" id="packnote">MYP binds on construct validity: criterion strands decide what is legal.</div>
+        </div>
+        <div class="setting">
+          <label for="subject">Subject</label>
+          <select id="subject">
+            <option value="history">History · Ιστορία / I&amp;S</option>
+            <option value="literature">Literature · Λογοτεχνία / Language &amp; Literature</option>
+            <option value="modern_greek">Modern Greek · Νεοελληνική Γλώσσα</option>
+          </select>
+        </div>
+        <div class="setting">
+          <label for="mode">Assessment mode</label>
+          <div class="seg" id="mode" role="group">
+            <button data-v="teaching" aria-pressed="true">Teaching</button>
+            <button data-v="formative" aria-pressed="false">Formative</button>
+            <button data-v="summative_internal" aria-pressed="false">Summative</button>
+          </div>
+          <div class="note" id="modenote">Teaching: an unlisted move is flagged and proceeds.</div>
+        </div>
+        <div class="setting" style="margin-bottom:0">
+          <label for="handle">Class</label>
+          <input id="handle" placeholder="Γ2, MYP4B…" style="border:1px solid var(--rule);border-radius:8px;padding:7px 9px;background:var(--surface);color:var(--ink);font:inherit;font-size:13px">
+          <div class="note">A label you type. Not a roster — no student is ever named.</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <div class="eyebrow">Or open a demo</div>
+        <div class="demos" id="demos"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 · READ ============ -->
+<section class="panel" id="p1">
+  <div class="h-row"><h2 id="readtitle">Read</h2><span class="tag" id="readmeta"></span></div>
+  <p class="lede" id="readlede"></p>
+  <div class="metrics" id="metrics"></div>
+  <div class="appar">
+    <div class="doc" id="docview"></div>
+    <div class="rail">
+      <div class="rail-h"><span>What makes this hard</span><span id="findcount"></span></div>
+      <div class="railscroll" id="findings"></div>
+      <button class="btn" id="tothe-room" style="margin-top:4px">Next — describe the room</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 · ROOM ============ -->
+<section class="panel" id="p2">
+  <div class="h-row"><h2>The room</h2></div>
+  <p class="lede">Tick what you observe. Not diagnoses — barriers. Two dyslexic students need different things; a dyslexic student and one with a working-memory deficit often need the same thing. Aim for fifteen seconds.</p>
+  <div class="room-grid">
+    <div id="chipboard"></div>
+    <div>
+      <div class="card">
+        <div class="eyebrow">Session only</div>
+        <p style="font-size:12.5px;color:var(--ink-2);margin:0 0 12px;line-height:1.5">This profile is held in the tab. It is not written to disk, not sent anywhere, and not recoverable if you reload. That is deliberate.</p>
+        <div id="gate"></div>
+        <div id="arrwarn"></div>
+        <button class="btn" id="toplan" style="width:100%;margin-top:12px" disabled>Build the plan</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 · PLAN ============ -->
+<section class="panel" id="p3">
+  <div class="h-row"><h2>Plan</h2><span class="tag" id="planmeta"></span></div>
+  <p class="lede">Every move quotes the span of your text it touches. Nothing replaces your words unless you ask for it by name.</p>
+  <div class="tabs" id="plantabs">
+    <button class="tab" data-t="moves" aria-selected="true">Proposed<span class="ct" id="cmoves"></span></button>
+    <button class="tab" data-t="refusals" aria-selected="false">Refused<span class="ct" id="crefs"></span></button>
+  </div>
+  <div class="appar">
+    <div class="doc" id="planview"></div>
+    <div class="rail">
+      <div class="rail-h"><span id="railtitle">Proposed moves</span><button class="iconbtn" id="acceptall" style="padding:3px 8px;font-size:11px">Accept all</button></div>
+      <div class="railscroll" id="movelist"></div>
+      <button class="btn" id="toexport" style="margin-top:4px">Next — export</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5 · EXPORT ============ -->
+<section class="panel" id="p4">
+  <div class="h-row"><h2>Export</h2></div>
+  <p class="lede">Two renders from one source. The student copy carries no diagnostic marking, no barrier codes, and no route name a student could read as a rank.</p>
+  <div class="exp-grid">
+    <div class="expcard">
+      <h3>Student copy</h3>
+      <p>Your document with the accepted scaffolds added beside it. Nothing about the room on the page.</p>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">
+        <button class="btn sm" data-view="student">Preview</button>
+        <button class="btn ghost sm" id="printstu">Print</button>
+      </div>
+    </div>
+    <div class="expcard">
+      <h3>Teacher copy</h3>
+      <p>The same page plus every rationale, evidence grade, fade class, and the full list of what was refused and why.</p>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">
+        <button class="btn sm" data-view="teacher">Preview</button>
+        <button class="btn ghost sm" id="printteach">Print</button>
+      </div>
+    </div>
+    <div class="expcard">
+      <h3>Word document</h3>
+      <p id="docxnote">Your original .docx with the scaffolds inserted in place — your header, your logo, your tables, your fonts.</p>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">
+        <button class="btn sm" id="dldocx" disabled>Download .docx</button>
+      </div>
+    </div>
+  </div>
+  <div class="out" id="outview"></div>
+</section>
+
+<!-- ============ REFERENCE ============ -->
+<section class="panel" id="p9">
+  <div class="h-row"><h2>Reference</h2></div>
+  <p class="lede">The data this runs on. All of it is about tasks and language — none of it is about a student.</p>
+  <div class="tabs" id="reftabs">
+    <button class="tab" data-r="verdicts" aria-selected="true">Verdicts</button>
+    <button class="tab" data-r="terms" aria-selected="false">Command terms</button>
+    <button class="tab" data-r="ff" aria-selected="false">False friends</button>
+    <button class="tab" data-r="cog" aria-selected="false">Cognates</button>
+    <button class="tab" data-r="cards" aria-selected="false">Strategies</button>
+    <button class="tab" data-r="refused" aria-selected="false">What we refuse to ship</button>
+  </div>
+  <div id="refbody"></div>
+</section>
+
+</main>
+</div>
+
+<script>
+const PACK = /*__PACK__*/ {};
+/* ============================================================
+   Δίοδος engine — everything below runs in this tab.
+   No network call. No student data. No storage.
+   ============================================================ */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nfc=s=>(s||'').normalize('NFC');
+
+const S={pack:'ib_myp',subject:'history',mode:'teaching',handle:'',lang:'el',
+  title:'',blocks:[],docx:null,analysis:null,strands:[],
+  profile:{bar:{},str:new Set(),arr:new Set()},
+  moves:[],refusals:[],view:'student',candidates:[]};
+
+/* ---------- 1. text primitives ---------- */
+const GR=/[Ͱ-Ͽἀ-῿]/;
+const WORD=/[\p{L}\p{M}][\p{L}\p{M}'’΄-΅-]*/gu;
+const words=s=>s.match(WORD)||[];
+function detectLang(t){const g=(t.match(/[Ͱ-Ͽἀ-῿]/g)||[]).length,
+  l=(t.match(/[A-Za-z]/g)||[]).length;return g>=l?'el':'en';}
+function sentences(t){
+  const out=[];let last=0;const re=/[.;!?·…]+[\s"»”)]*/g;let m;
+  while((m=re.exec(t))){const end=m.index+m[0].length;
+    const s=t.slice(last,end).trim();if(s.length>1)out.push({text:s,start:last,end});last=end;}
+  const tail=t.slice(last).trim();if(tail.length>1)out.push({text:tail,start:last,end:t.length});
+  return out;
+}
+/* Modern Greek rule-based syllabifier */
+const V='αάεέηήιίϊΐοόυύϋΰωώ', VS=new Set(V);
+const DIG=['αι','ει','οι','υι','ου','αί','εί','οί','ού','αυ','ευ','ηυ','αύ','εύ','ηύ'];
+function grSyll(w){
+  w=w.toLowerCase();let i=0,n=0,prevV=false;
+  while(i<w.length){
+    const two=w.slice(i,i+2);
+    if(DIG.includes(two)){n++;i+=2;prevV=true;continue;}
+    if(VS.has(w[i])){if(!prevV)n++;prevV=true;i++;continue;}
+    prevV=false;i++;
+  }
+  return Math.max(1,n);
+}
+function enSyll(w){
+  w=w.toLowerCase().replace(/[^a-z]/g,'');if(!w)return 1;
+  const m=w.replace(/e$/,'').match(/[aeiouy]+/g);return Math.max(1,m?m.length:1);
+}
+const syll=(w,l)=>l==='el'?grSyll(w):enSyll(w);
+function rx(src,f='gu'){try{return new RegExp(src,f)}catch(e){return null}}
+
+/* ---------- 2. analysers ---------- */
+function analyseBlock(b){
+  const t=nfc(b.text),lang=detectLang(t),ws=words(t),sn=sentences(t);
+  const A={lang,wordCount:ws.length,blockWords:ws.length,
+    meanSentenceWords:sn.length?ws.length/sn.length:ws.length,
+    longestSentence:0,longestSentenceText:'',hits:[]};
+  sn.forEach(s=>{const n=words(s.text).length;
+    if(n>A.longestSentence){A.longestSentence=n;A.longestSentenceText=s.text;}});
+  const sy=ws.map(w=>syll(w,lang));
+  A.meanSyll=ws.length?sy.reduce((a,c)=>a+c,0)/ws.length:0;
+  A.polyPct=ws.length?100*sy.filter(x=>x>=4).length/ws.length:0;
+
+  const push=(type,start,end,label,extra)=>A.hits.push({type,start,end,
+    text:t.slice(start,end),label,...(extra||{})});
+
+  if(lang==='el'){
+    /* genitive chains: runs of του/της/των-headed NPs */
+    const arts=(PACK.greek?.genitive_articles||['του','της','των']);
+    const aset=new Set(arts.map(a=>a.toLowerCase()));
+    const toks=[...t.matchAll(WORD)];
+    let run=null;
+    toks.forEach((m,i)=>{
+      const w=m[0].toLowerCase();
+      if(aset.has(w)){
+        if(run&&i-run.lastIdx<=3){run.depth++;run.end=m.index+m[0].length;run.lastIdx=i;}
+        else{if(run&&run.depth>=2)push('genitive',run.start,Math.min(t.length,run.end+24),
+              'γενική βάθος '+run.depth,{depth:run.depth});
+          run={start:m.index,end:m.index+m[0].length,depth:1,lastIdx:i};}
+      }
+    });
+    if(run&&run.depth>=2)push('genitive',run.start,Math.min(t.length,run.end+24),'γενική βάθος '+run.depth,{depth:run.depth});
+    A.genitiveDepthMax=Math.max(0,...A.hits.filter(h=>h.type==='genitive').map(h=>h.depth||0));
+    A.genitiveChains=A.hits.filter(h=>h.type==='genitive').length;
+
+    /* nominalisation */
+    const sufs=PACK.greek?.nominalisation_suffixes||[];
+    const stop=new Set((PACK.greek?.lexicalised_stoplist||[]).map(x=>x.toLowerCase()));
+    let nom=0;
+    toks.forEach(m=>{const w=m[0].toLowerCase();
+      if(w.length<6||stop.has(w))return;
+      if(sufs.some(s=>w.endsWith(s.replace(/^-/,'')))){nom++;
+        push('nominalisation',m.index,m.index+m[0].length,'ονοματοποίηση');}});
+    A.nominalisationPer100=ws.length?100*nom/ws.length:0;
+
+    /* λόγιες μετοχές */
+    let lg=0;
+    (PACK.greek?.logia_participles||[]).forEach(src=>{const r=rx(src);if(!r)return;
+      let m;while((m=r.exec(t))){if(!m[0])break;lg++;
+        push('logio',m.index,m.index+m[0].length,'λόγια μετοχή');}});
+    A.logiaCount=lg;
+
+    /* λόγιο register phrases */
+    let rp=0;
+    (PACK.greek?.register_pairs||[]).forEach(p=>{
+      const i=t.toLowerCase().indexOf(p.logio.toLowerCase());
+      if(i>=0){rp++;push('register',i,i+p.logio.length,'λόγιο',{plain:p.plain,keep_when:p.keep_when});}});
+    A.registerHits=rp;
+
+    /* subordination proxy */
+    const conn=(PACK.greek?.connectives||[]);
+    let sub=0;conn.forEach(c=>{const i=t.toLowerCase().indexOf(' '+c.el.toLowerCase());if(i>=0)sub++;});
+    A.connectiveCount=sub;
+  }else{
+    /* tier-2 academic connectives/stance */
+    let t2=0;
+    (PACK.bridge?.tier2||[]).forEach(x=>{
+      const r=rx('(?<![\\p{L}])'+x.en.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![\\p{L}])','giu');
+      if(!r)return;let m;while((m=r.exec(t))){t2++;
+        push('tier2',m.index,m.index+m[0].length,x.fn,{el:x.el});}});
+    A.tier2Count=t2;A.tier2Per100=ws.length?100*t2/ws.length:0;
+
+    /* cognates a Greek L1 student already owns */
+    let cg=0;
+    (PACK.bridge?.cognates||[]).forEach(x=>{
+      const r=rx('(?<![\\p{L}])'+x.en.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\w{0,3}(?![\\p{L}])','giu');
+      if(!r)return;let m;while((m=r.exec(t))){cg++;
+        push('cognate',m.index,m.index+m[0].length,x.transparency,{el:x.el,warn:x.warn,warn_el:x.warn_el});}});
+    A.cognateCount=cg;
+
+    /* false friends */
+    (PACK.bridge?.false_friends||[]).forEach(x=>{
+      const r=rx('(?<![\\p{L}])'+x.en.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\w{0,4}(?![\\p{L}])','giu');
+      if(!r)return;let m;while((m=r.exec(t))){
+        push('falsefriend',m.index,m.index+m[0].length,'false friend',x);}});
+  }
+
+  /* named entities + dates (both languages) */
+  const ne=[...t.matchAll(/\b(?:[Α-ΩΆΈΉΊΌΎΏA-Z][\wΑ-Ωα-ωά-ώ]{2,}(?:\s+[Α-ΩΆΈΉΊΌΎΏA-Z][\wΑ-Ωα-ωά-ώ]{2,}){0,2})/gu)]
+    .filter(m=>m.index>0);
+  A.entities=[...new Set(ne.map(m=>m[0]))].slice(0,14);
+  A.dates=[...new Set((t.match(/\b1[0-9]{3}\b|\b20[0-2][0-9]\b/g)||[]))];
+
+  /* command terms */
+  A.terms=[];
+  (PACK.terms?.en||[]).forEach(x=>{
+    const r=rx('(?<![\\p{L}])'+x.term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![\\p{L}])','giu');
+    if(!r)return;let m;while((m=r.exec(t))){
+      A.terms.push({lang:'en',start:m.index,end:m.index+m[0].length,surface:m[0],...x});}});
+  (PACK.terms?.el||[]).forEach(x=>{const r=rx(x.regex,'gu');if(!r)return;
+    let m;while((m=r.exec(t))){if(!m[0])break;
+      A.terms.push({lang:'el',start:m.index,end:m.index+m[0].length,surface:m[0],...x});}});
+  A.terms.forEach(x=>push('term',x.start,x.end,x.term));
+  return A;
+}
+
+function analyseDoc(){
+  S.blocks.forEach(b=>{b.a=analyseBlock(b)});
+  const all=S.blocks.map(b=>b.a);
+  const tw=all.reduce((a,c)=>a+c.wordCount,0)||1;
+  const agg={words:tw,lang:detectLang(S.blocks.map(b=>b.text).join(' ')),
+    meanSentenceWords:all.reduce((a,c)=>a+c.meanSentenceWords*c.wordCount,0)/tw,
+    longestSentence:Math.max(0,...all.map(c=>c.longestSentence)),
+    longestSentenceText:'',meanSyll:all.reduce((a,c)=>a+c.meanSyll*c.wordCount,0)/tw,
+    polyPct:all.reduce((a,c)=>a+c.polyPct*c.wordCount,0)/tw,
+    genitiveDepthMax:Math.max(0,...all.map(c=>c.genitiveDepthMax||0)),
+    genitiveChains:all.reduce((a,c)=>a+(c.genitiveChains||0),0),
+    nominalisationPer100:all.reduce((a,c)=>a+(c.nominalisationPer100||0)*c.wordCount,0)/tw,
+    logiaCount:all.reduce((a,c)=>a+(c.logiaCount||0),0),
+    registerHits:all.reduce((a,c)=>a+(c.registerHits||0),0),
+    tier2Per100:all.reduce((a,c)=>a+(c.tier2Per100||0)*c.wordCount,0)/tw,
+    cognateCount:all.reduce((a,c)=>a+(c.cognateCount||0),0),
+    meanBlockWords:tw/Math.max(1,S.blocks.length),
+    entities:[...new Set(all.flatMap(c=>c.entities))].slice(0,16),
+    dates:[...new Set(all.flatMap(c=>c.dates))].sort(),
+    terms:all.flatMap((c,i)=>c.terms.map(x=>({...x,bi:i}))),
+    falsefriends:all.flatMap((c,i)=>c.hits.filter(h=>h.type==='falsefriend').map(h=>({...h,bi:i}))),
+    cognates:all.flatMap((c,i)=>c.hits.filter(h=>h.type==='cognate').map(h=>({...h,bi:i}))),
+    registerPairs:all.flatMap((c,i)=>c.hits.filter(h=>h.type==='register').map(h=>({...h,bi:i}))),
+  };
+  let L=0;S.blocks.forEach(b=>{if(b.a.longestSentence>L){L=b.a.longestSentence;
+    agg.longestSentenceText=b.a.longestSentenceText;}});
+  S.lang=agg.lang;S.analysis=agg;
+  S.strands=strandsFor();
+  return agg;
+}
+
+/* ---------- 3. demand mapping (feature → code → load 0-3) ---------- */
+const DEMAND_MAP={
+  'syntax.complexity':[['genitiveDepthMax',[2,3,4]],['meanSentenceWords',[17,24,31]]],
+  'lex.academic_breadth':[['nominalisationPer100',[4,7,10]],['tier2Per100',[3,5,8]]],
+  'register.distance':[['logiaCount',[1,2,4]],['registerHits',[1,3,5]]],
+  'wm.verbal':[['longestSentence',[22,30,40]]],
+  'instruction.holding':[['meanBlockWords',[45,80,130]]],
+  'decode.rate':[['meanSyll',[2.1,2.5,2.9]],['polyPct',[16,24,32]]],
+  'visual.crowding':[['meanBlockWords',[60,110,170]]],
+  'inference.load':[['entityCount',[4,8,12]]],
+  'discourse.organisation':[['meanBlockWords',[50,90,140]]],
+};
+function demandVector(){
+  const A=S.analysis,d={};
+  const val=k=>k==='entityCount'?A.entities.length:(A[k]||0);
+  Object.entries(DEMAND_MAP).forEach(([code,feats])=>{
+    let load=0;feats.forEach(([f,th])=>{const v=val(f);
+      let l=0;th.forEach((t,i)=>{if(v>=t)l=i+1});load=Math.max(load,l);});
+    d[code]=load;
+  });
+  if(A.terms.length)d['inference.load']=Math.max(d['inference.load']||0,1);
+  return d;
+}
+
+/* ---------- 4. strands ---------- */
+const SUBJ_GROUP={history:'individuals_and_societies',literature:'language_and_literature',modern_greek:'modern_greek'};
+function strandsFor(){
+  if(S.pack==='gymnasio_el')return [];
+  const grp=SUBJ_GROUP[S.subject];
+  const verbs=new Set((S.analysis?.terms||[]).map(t=>(t.en_pair||t.term||'').toLowerCase()));
+  const rows=(PACK.verdicts?.strands||[]).filter(s=>s.subject_group===grp);
+  const hit=rows.filter(s=>(s.assessed_verbs||[]).some(v=>verbs.has(v.toLowerCase())));
+  return (hit.length?hit:rows).slice(0,4);
+}
+
+/* ---------- 5. collide + verdict ---------- */
+function collide(){
+  const prof=S.profile.bar, dem=demandVector();
+  const cards=(PACK.cards?.cards||[]);
+  const affect=new Set((PACK.ontology?.codes||[]).filter(c=>c.affect_only).map(c=>c.code));
+  const out=[];
+  cards.forEach(c=>{
+    if(!(c.subjects||[]).includes('any')&&!(c.subjects||[]).includes(S.subject))return;
+    if(!(c.languages||[]).includes('any')&&!(c.languages||[]).includes(S.lang))return;
+    const fired=(c.targets||[]).filter(code=>{
+      const sev=prof[code]||prof[S.lang+':'+code]||0;return sev>=(c.min_severity||1);});
+    if(!fired.length)return;
+    if(fired.every(f=>affect.has(f))&&!['teacher_action','render'].includes(c.execution_kind))return;
+    const dhit=(c.demand||[]).filter(code=>(dem[code]||0)>=1);
+    if((c.demand||[]).length&&!dhit.length)return;
+    const contra=(c.contraindications||[]).filter(code=>(prof[code]||prof[S.lang+':'+code]||0)>=2);
+    out.push({card:c,fired,dhit,contra,load:Math.max(0,...(c.demand||[]).map(x=>dem[x]||0))});
+  });
+  return out.sort((a,b)=>(b.load-a.load)||(a.card.execution_kind==='generative')-(b.card.execution_kind==='generative'));
+}
+const SPEC=(r,k,v)=>r[k]==='*'?0:(r[k]===v?2:-1);
+function lookupVerdict(sid){
+  const grp=S.pack==='gymnasio_el'?S.subject:SUBJ_GROUP[S.subject];
+  const verbs=(S.analysis?.terms||[]).map(t=>(t.en_pair||t.term||'').toLowerCase());
+  const rows=(PACK.verdicts?.rows||[]).filter(r=>r.strategy_id===sid&&r.standards_pack===S.pack);
+  let best=null,bs=-1;
+  rows.forEach(r=>{
+    let sc=0,ok=true;
+    const g=SPEC(r,'subject_group',grp);if(g<0)ok=false;else sc+=g;
+    if(r.strand_id!=='*'){const m=S.strands.some(s=>s.strand_id===r.strand_id);
+      if(!m)ok=false;else sc+=3;}
+    if(r.assessed_verb!=='*'){const m=verbs.includes(r.assessed_verb.toLowerCase());
+      if(!m)ok=false;else sc+=2;}
+    if(ok&&sc>bs){bs=sc;best=r;}
+  });
+  if(best)return{...best,matched:true};
+  return{verdict:S.mode==='summative_internal'?'invalidating':'conditional',matched:false,
+    rationale_en:S.mode==='summative_internal'
+      ?'No verdict exists for this move on this strand, and on a summative the default is to refuse. Override it and your reason becomes the first row.'
+      :'No verdict exists for this move on this strand yet. Flagged, not blocked.',
+    rationale_el:S.mode==='summative_internal'
+      ?'Δεν υπάρχει καταγεγραμμένη κρίση γι’ αυτή την κίνηση σε αυτό το κριτήριο· σε αθροιστική αξιολόγηση η προεπιλογή είναι η άρνηση.'
+      :'Δεν υπάρχει ακόμη καταγεγραμμένη κρίση. Επισημαίνεται, δεν μπλοκάρεται.',
+    strand_id:S.strands[0]?.strand_id||'—'};
+}
+function buildPlan(){
+  const cands=collide();S.moves=[];S.refusals=[];
+  cands.forEach(c=>{
+    const v=lookupVerdict(c.card.id);
+    const item={...c,verdict:v,id:c.card.id,decision:null};
+    if(c.card.never_override){item.verdict={...v,verdict:'invalidating',
+      rationale_en:v.matched?v.rationale_en:'The primary text is the object of assessment. It is never rewritten, simplified, modernised or paraphrased in place — the only absolute in this system.',
+      rationale_el:v.matched?v.rationale_el:'Το πρωτότυπο κείμενο είναι το αντικείμενο της αξιολόγησης. Δεν ξαναγράφεται ποτέ.'};
+      S.refusals.push(item);return;}
+    if(c.contra.length){item.verdict={...v,verdict:'invalidating',
+      rationale_en:'Contraindicated for a barrier you ticked: '+c.contra.join(', ')+'.',
+      rationale_el:'Αντενδείκνυται για φραγμό που σημειώσατε: '+c.contra.join(', ')+'.'};
+      S.refusals.push(item);return;}
+    if(v.verdict==='invalidating')S.refusals.push(item);
+    else{item.decision='accept';S.moves.push(item);}
+  });
+  S.candidates=cands;
+}
+
+/* ---------- 6. scaffold generators (all deterministic, zero tokens) ---------- */
+function kindOf(c){const i=(c.id||'').toUpperCase();
+  if(/COLOMETR|KOLA|KΩΛ/.test(i))return'colometry';
+  if(/COMMAND|CT-|TERM/.test(i))return'terms';
+  if(/COGNATE|BRIDGE/.test(i))return'cognates';
+  if(/FRIEND/.test(i))return'friends';
+  if(/ACTOR|AGENT|WHO/.test(i))return'actors';
+  if(/TIMELINE|CHRONO/.test(i))return'timeline';
+  if(/OPVL|PROVENANCE|GRID/.test(i))return'opvl';
+  if(/STEM|DISCOURSE|CONNECT/.test(i))return'stems';
+  if(/SPLIT|SENTENCE|DENSIF/.test(i))return'split';
+  if(/DENOMINAL|REGISTER|GENITIVE|PLAIN/.test(i))return'register';
+  if(/GLOSS|LEXICON|TIER/.test(i))return'gloss';
+  if(/SPACING|LAYOUT|RENDER|LINE|FONT/.test(i))return'render';
+  if(/WORKED|FADE|EXAMPLE/.test(i))return'worked';
+  if(/NOTICE|LADDER|NAME/.test(i))return'ladder';
+  if(/MODEL|FRAME|ORGANIS|ORGANIZ/.test(i))return'organiser';
+  return c.op==='render'?'render':'generic';
+}
+function boxOf(title,inner){return `<div class="ins"><div class="it">${esc(title)}</div>${inner}</div>`;}
+function genScaffold(m){
+  const c=m.card,A=S.analysis,el=S.lang==='el';
+  switch(kindOf(c)){
+    case'terms':{
+      const seen=new Set(),rows=[];
+      (A.terms||[]).forEach(t=>{if(seen.has(t.term))return;seen.add(t.term);
+        const g=t.lang==='en'?t.el_gloss:t.en_pair;
+        const w=t.lang==='en'?(el?t.examiner_wants_el:t.examiner_wants):t.examiner_wants_el;
+        const tr=t.lang==='en'?(el?t.trap_el:t.trap):'';
+        rows.push(`<div class="gl"><b>${esc(t.term)}</b><span>${esc(g||'')}${w?' — '+esc(w):''}${tr?`<br><em style="color:var(--rubric)">⚠ ${esc(tr)}</em>`:''}</span></div>`);});
+      return rows.length?boxOf(el?'Τι ζητάει η ερώτηση':'What the question is asking for',rows.join('')):'';
+    }
+    case'cognates':{
+      const seen=new Set(),rows=[];
+      (A.cognates||[]).forEach(h=>{const k=h.text.toLowerCase();if(seen.has(k))return;seen.add(k);
+        rows.push(`<div class="gl"><b>${esc(h.text)}</b><span>${esc(h.el||'')}${h.warn?` — <em style="color:var(--cond)">${esc(el?(h.warn_el||h.warn):h.warn)}</em>`:''}</span></div>`);});
+      return rows.length?boxOf(el?'Λέξεις που ήδη ξέρεις':'Words you already own',
+        `<p style="margin:0 0 6px;font-size:12px;color:var(--ink-2)">${el?'Η ελληνική ρίζα σού τη δίνει.':'The Greek root already gives you this.'}</p>`+rows.slice(0,12).join('')):'';
+    }
+    case'friends':{
+      const seen=new Set(),rows=[];
+      (A.falsefriends||[]).forEach(h=>{const k=h.en;if(seen.has(k))return;seen.add(k);
+        rows.push(`<div class="gl"><b>${esc(h.en)}</b><span>≠ <b style="font-weight:600">${esc(h.misread_as)}</b> (${esc(h.misread_means)}) · ${esc(h.actual_sense)} = <b style="font-weight:600">${esc(h.el_correct)}</b></span></div>`);});
+      return rows.length?boxOf(el?'Προσοχή — ψευδόφιλες λέξεις':'Careful — false friends',rows.join('')):'';
+    }
+    case'actors':{
+      const ents=(A.entities||[]).slice(0,10);
+      return ents.length?boxOf(el?'Ποιος είναι ποιος':'Who is who',
+        `<ul>${ents.map(e=>`<li><b>${esc(e)}</b> — <span style="color:var(--ink-3)">………………………………</span></li>`).join('')}</ul>`):'';
+    }
+    case'timeline':{
+      const d=(A.dates||[]).slice(0,10);
+      return d.length?boxOf(el?'Χρονολόγιο':'Timeline',
+        `<div style="display:flex;gap:4px;flex-wrap:wrap;font-family:var(--f-mono);font-size:12.5px">${d.map(x=>`<span style="border:1px solid var(--accent);border-radius:999px;padding:3px 9px">${esc(x)}</span>`).join('')}</div>`):'';
+    }
+    case'opvl':return boxOf(el?'Πλαίσιο πηγής — κενό':'Source grid — blank',
+      `<table><tr><th style="width:26%">${el?'Προέλευση':'Origin'}</th><td></td></tr>
+       <tr><th>${el?'Σκοπός':'Purpose'}</th><td></td></tr>
+       <tr><th>${el?'Αξία':'Value'}</th><td></td></tr>
+       <tr><th>${el?'Περιορισμός':'Limitation'}</th><td></td></tr></table>
+       <p style="margin:7px 0 0;font-size:11.5px;color:var(--ink-3)">${el?'Το πλαίσιο είναι κενό επίτηδες.':'The grid is blank on purpose.'}</p>`);
+    case'stems':{
+      const fns=['cause','contrast','concession','result'];
+      const src=el?(PACK.greek?.connectives||[]).filter(c=>c.register!=='λόγιο'):(PACK.bridge?.tier2||[]);
+      const rows=fns.map(f=>{const xs=src.filter(x=>x.fn===f).slice(0,4);
+        if(!xs.length)return'';
+        return `<div class="gl"><b>${esc(f)}</b><span>${xs.map(x=>esc(el?x.el:x.en)).join(' · ')}</span></div>`;}).join('');
+      return rows?boxOf(el?'Συνδετικά — δομή, όχι περιεχόμενο':'Connectives — structure, not content',
+        rows+`<p style="margin:7px 0 0;font-size:11.5px;color:var(--ink-3)">${el?'Η σκέψη είναι δική σου· αυτά είναι μόνο οι αρθρώσεις.':'The reasoning is yours. These are only the joints.'}</p>`):'';
+    }
+    case'split':{
+      if(!A.longestSentenceText)return'';
+      const parts=A.longestSentenceText.split(/(?<=[,·;])\s+/).filter(Boolean);
+      return parts.length>1?boxOf(el?'Η μακρύτερη πρόταση, σπασμένη':'The longest sentence, split',
+        `<div class="colo" style="margin:0;border:0;padding:0">${parts.map(p=>`<span>${esc(p)}</span>`).join('')}</div>
+         <p style="margin:7px 0 0;font-size:11.5px;color:var(--ink-3)">${A.longestSentence} ${el?'λέξεις':'words'} · ${el?'ίδιες λέξεις, ίδια σειρά':'same words, same order'}</p>`):'';
+    }
+    case'register':{
+      const rows=(A.registerPairs||[]).slice(0,10).map(h=>
+        `<div class="gl"><b>${esc(h.text)}</b><span>→ ${esc(h.plain)}${h.keep_when?`<br><em style="color:var(--cond);font-size:11.5px">${esc(h.keep_when)}</em>`:''}</span></div>`).join('');
+      return rows?boxOf('Λόγιο → καθομιλουμένη (πρόταση, δική σου η απόφαση)',rows):'';
+    }
+    case'gloss':{
+      const seen=new Set(),rows=[];
+      (A.cognates||[]).concat((A.terms||[]).map(t=>({text:t.term,el:t.el_gloss})))
+        .forEach(h=>{const k=(h.text||'').toLowerCase();if(!k||seen.has(k))return;seen.add(k);
+          rows.push(`<div class="gl"><b>${esc(h.text)}</b><span>${esc(h.el||'………………')}</span></div>`);});
+      return rows.length?boxOf(el?'Γλωσσάρι στο περιθώριο':'Margin glossary',rows.slice(0,14).join('')):'';
+    }
+    case'worked':return boxOf(el?'Λυμένο παράδειγμα και σταδιακή απόσυρση':'Worked example, then fading',
+      `<ol style="margin:0;padding-left:18px"><li><b>${el?'Μαζί':'Together'}</b> — ${el?'το κάνω εγώ, φωναχτά.':'I do it, out loud.'}</li>
+       <li><b>${el?'Μισό':'Half'}</b> — ${el?'σου δίνω την αρχή, τη συνεχίζεις.':'I start it, you finish it.'}</li>
+       <li><b>${el?'Μόνος':'Alone'}</b> — ${el?'όλο δικό σου.':'all yours.'}</li></ol>
+       <p style="margin:7px 0 0;font-size:11.5px;color:var(--ink-3)">${el?'Σκαλωσιά με ημερομηνία απόσυρσης = διδασκαλία ATL, όχι μόνιμη διευκόλυνση.':'A scaffold with a fade date is ATL instruction, not a permanent arrangement.'}</p>`);
+    case'ladder':return boxOf(el?'Παρατηρώ → ονομάζω → γιατί':'Notice → name → why',
+      `<table><tr><th style="width:30%">${el?'Τι παρατηρώ':'What I notice'}</th><td></td></tr>
+       <tr><th>${el?'Πώς λέγεται':'What it is called'}</th><td></td></tr>
+       <tr><th>${el?'Γιατί το επέλεξε':'Why the writer chose it'}</th><td></td></tr></table>
+       <p style="margin:7px 0 0;font-size:11.5px;color:var(--ink-3)">${el?'Η ερμηνεία δεν δίνεται. Δίνεται μόνο η διαδρομή.':'The interpretation is not supplied. Only the route to it.'}</p>`);
+    case'organiser':return boxOf(el?'Τι άλλαξε / τι έμεινε ίδιο':'What changed / what stayed the same',
+      `<table><tr><th style="width:50%">${el?'Άλλαξε':'Changed'}</th><th>${el?'Έμεινε ίδιο':'Stayed the same'}</th></tr>
+       <tr><td></td><td></td></tr><tr><td></td><td></td></tr></table>`);
+    case'colometry':case'render':return'';
+    default:return boxOf(el?c.name_el:c.name_en,
+      `<p style="margin:0">${esc(el?c.what_it_does_el:c.what_it_does_en)}</p>`);
+  }
+}
+function colometrise(text){
+  const seps=/(?<=[,·;:.])\s+|\s+(?=(?:ὁ|ἡ|καὶ|δὲ|γὰρ|ἀλλὰ|ὅτι|ὡς|ἵνα)\s)/;
+  let parts=text.split(seps).filter(x=>x&&x.trim());
+  if(parts.length<2)parts=text.split(/\s+(?=\S{4,}\s\S)/).reduce((a,c,i)=>{ /* fall back: ~9-word kola */
+    const last=a[a.length-1];if(last&&words(last).length<9){a[a.length-1]=last+' '+c;}else a.push(c);return a;},[]);
+  return parts;
+}
+function renderDirectives(){
+  const d={};S.moves.filter(m=>m.decision==='accept'&&kindOf(m.card)==='render').forEach(()=>{
+    d.spacing=true;});
+  const p=S.profile.bar;
+  if((p['decode.rate']||p[S.lang+':decode.rate']||0)>=2||(p['visual.crowding']||0)>=2){d.spacing=true;}
+  return d;
+}
+
+/* ---------- 7. docx in / out ---------- */
+const W='http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+async function readDocx(file){
+  const zip=await JSZip.loadAsync(await file.arrayBuffer());
+  const f=zip.file('word/document.xml');if(!f)throw new Error('no document.xml');
+  let xml=await f.async('string');
+  const decl=(xml.match(/^<\?xml[^>]*\?>\s*/)||[''])[0];
+  const doc=new DOMParser().parseFromString(xml.replace(/^﻿/,''),'application/xml');
+  if(doc.getElementsByTagName('parsererror').length)throw new Error('malformed XML');
+  const body=doc.getElementsByTagNameNS(W,'body')[0];
+  const ps=[...doc.getElementsByTagNameNS(W,'p')];
+  const blocks=[];const refs=[];
+  ps.forEach(p=>{
+    if(p.closest&&p.closest('txbxContent'))return;
+    const ts=[...p.getElementsByTagNameNS(W,'t')];
+    const text=ts.map(t=>t.textContent).join('').trim();
+    if(!text)return;
+    blocks.push({text,kind:guessKind(text,blocks.length)});refs.push(p);
+  });
+  const feats={textboxes:doc.getElementsByTagName('w:txbxContent').length,
+    equations:doc.getElementsByTagName('m:oMath').length,
+    contentControls:doc.getElementsByTagNameNS(W,'sdt').length,
+    tracked:doc.getElementsByTagNameNS(W,'ins').length+doc.getElementsByTagNameNS(W,'del').length};
+  return {zip,doc,body,refs,blocks,decl,feats,name:file.name};
+}
+function guessKind(t,i){
+  if(/^\s*\d+[.)]\s/.test(t)||/[;?]\s*$/.test(t))return'question';
+  if(i===0&&t.length<90)return'heading';
+  if(t.length<70&&!/[.·]$/.test(t))return'heading';
+  if(/^(Να\s|Απαντήστε|Διαβάστε|Read |Answer |Using |Με βάση)/i.test(t))return'instruction';
+  if(t.length>180)return'source';
+  return'source';
+}
+function newPara(D,text,{bold=false,italic=false}={}){
+  const p=D.createElementNS(W,'w:p');
+  const pr=D.createElementNS(W,'w:pPr');
+  const sp=D.createElementNS(W,'w:spacing');sp.setAttributeNS(W,'w:before','120');sp.setAttributeNS(W,'w:after','60');
+  pr.appendChild(sp);
+  const bd=D.createElementNS(W,'w:pBdr');
+  const lf=D.createElementNS(W,'w:left');
+  lf.setAttributeNS(W,'w:val','single');lf.setAttributeNS(W,'w:sz','12');
+  lf.setAttributeNS(W,'w:space','6');lf.setAttributeNS(W,'w:color','1F5F6B');
+  bd.appendChild(lf);pr.appendChild(bd);
+  const ind=D.createElementNS(W,'w:ind');ind.setAttributeNS(W,'w:left','170');pr.appendChild(ind);
+  p.appendChild(pr);
+  const r=D.createElementNS(W,'w:r');
+  const rpr=D.createElementNS(W,'w:rPr');
+  if(bold)rpr.appendChild(D.createElementNS(W,'w:b'));
+  if(italic)rpr.appendChild(D.createElementNS(W,'w:i'));
+  const sz=D.createElementNS(W,'w:sz');sz.setAttributeNS(W,'w:val',bold?'20':'19');rpr.appendChild(sz);
+  const col=D.createElementNS(W,'w:color');col.setAttributeNS(W,'w:val','134048');rpr.appendChild(col);
+  r.appendChild(rpr);
+  const t=D.createElementNS(W,'w:t');
+  t.setAttribute('xml:space','preserve');t.textContent=text;
+  r.appendChild(t);p.appendChild(r);
+  return p;
+}
+function scaffoldLines(m){
+  const el=S.lang==='el',c=m.card,A=S.analysis,out=[];
+  const k=kindOf(c);
+  out.push({t:(el?c.name_el:c.name_en),bold:true});
+  const seen=new Set();
+  if(k==='terms'){(A.terms||[]).forEach(t=>{if(seen.has(t.term))return;seen.add(t.term);
+    out.push({t:'• '+t.term+' — '+(t.lang==='en'?(t.el_gloss+'. '+(el?t.examiner_wants_el:t.examiner_wants)):t.examiner_wants_el)});
+    const tr=t.lang==='en'?(el?t.trap_el:t.trap):'';if(tr)out.push({t:'   ⚠ '+tr,italic:true});});}
+  else if(k==='cognates'){(A.cognates||[]).slice(0,12).forEach(h=>{if(seen.has(h.text))return;seen.add(h.text);
+    out.push({t:'• '+h.text+' — '+(h.el||'')+(h.warn?' ('+(el?(h.warn_el||h.warn):h.warn)+')':'')});});}
+  else if(k==='friends'){(A.falsefriends||[]).forEach(h=>{if(seen.has(h.en))return;seen.add(h.en);
+    out.push({t:'• '+h.en+' ≠ '+h.misread_as+' ('+h.misread_means+') — '+h.actual_sense+' = '+h.el_correct});});}
+  else if(k==='actors'){(A.entities||[]).slice(0,10).forEach(e=>out.push({t:'• '+e+' — ………………………………'}));}
+  else if(k==='timeline'){out.push({t:(A.dates||[]).join('  ·  ')});}
+  else if(k==='opvl'){[el?'Προέλευση':'Origin',el?'Σκοπός':'Purpose',el?'Αξία':'Value',el?'Περιορισμός':'Limitation']
+    .forEach(x=>out.push({t:x+': ………………………………………………'}));}
+  else if(k==='split'){colometrise(A.longestSentenceText||'').forEach(p=>out.push({t:'   '+p}));}
+  else if(k==='register'){(A.registerPairs||[]).slice(0,10).forEach(h=>out.push({t:'• '+h.text+' → '+h.plain}));}
+  else out.push({t:(el?c.what_it_does_el:c.what_it_does_en)});
+  return out.filter(x=>x.t&&x.t.trim());
+}
+async function exportDocx(){
+  if(!S.docx)return;
+  const {zip,doc,refs,decl}=S.docx;
+  const D=doc;
+  const acc=S.moves.filter(m=>m.decision==='accept');
+  const anchor=refs[Math.min(refs.length-1,bestAnchor())];
+  acc.forEach(m=>{
+    const lines=scaffoldLines(m);if(!lines.length)return;
+    let after=anchor;
+    lines.forEach(l=>{const p=newPara(D,l.t,{bold:l.bold,italic:l.italic});
+      after.parentNode.insertBefore(p,after.nextSibling);after=p;});
+  });
+  let out=new XMLSerializer().serializeToString(D);
+  if(!/^<\?xml/.test(out))out=(decl||'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n')+out;
+  zip.file('word/document.xml',out);
+  const blob=await zip.generateAsync({type:'blob',
+    mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+  const dl=await window.claude?.use?.('downloads');
+  const fn=(S.docx.name||'worksheet').replace(/\.docx$/i,'')+' — Δίοδος.docx';
+  if(dl){await dl.save({filename:fn,data:blob});toast('Saved.');}
+  else toast('Download is not available in this view.');
+}
+function bestAnchor(){
+  let idx=0,best=-1;
+  S.blocks.forEach((b,i)=>{const sc=(b.kind==='source'?b.a.wordCount:0);if(sc>best){best=sc;idx=i;}});
+  return idx;
+}
+
+/* ---------- 8. rendering ---------- */
+function markup(b,which){
+  let t=nfc(b.text);const hits=(b.a.hits||[]).filter(h=>{
+    if(which==='read')return ['term','genitive','nominalisation','logio','falsefriend','tier2'].includes(h.type);
+    return false;});
+  if(!hits.length)return esc(t);
+  const cls={term:'ct',genitive:'gen',nominalisation:'nom',logio:'logio',falsefriend:'',tier2:'t3'};
+  const sorted=[...hits].sort((a,b)=>a.start-b.start);
+  let out='',cur=0;
+  sorted.forEach(h=>{if(h.start<cur)return;
+    out+=esc(t.slice(cur,h.start));
+    out+=`<mark class="${cls[h.type]||''}" title="${esc(h.label||'')}">${esc(t.slice(h.start,h.end))}</mark>`;
+    cur=h.end;});
+  out+=esc(t.slice(cur));return out;
+}
+function renderDocView(el,which){
+  el.innerHTML=S.blocks.map((b,i)=>
+    `<p class="blk" data-kind="${b.kind}" id="${which}-b${i}">${markup(b,which)}</p>`).join('');
+}
+function fmt(n,d=1){return Number(n||0).toFixed(d).replace(/\.0$/,'');}
+function renderRead(){
+  const A=S.analysis,el=A.lang==='el';
+  $('#readtitle').textContent=S.title||(el?'Το κείμενό σας':'Your document');
+  $('#readmeta').textContent=`${A.words} ${el?'λέξεις':'words'} · ${S.blocks.length} blocks · ${A.lang.toUpperCase()}`;
+  $('#readlede').textContent=el
+    ?'Δεν υπάρχει βαθμός αναγνωσιμότητας για τα ελληνικά — ο δείκτης Flesch–Kincaid μετράει μορφολογία, όχι δυσκολία. Αντ’ αυτού: τα τρία χαρακτηριστικά που κάνουν αυτό το κείμενο βαρύ, με το απόσπασμα.'
+    :'No single readability score. The three features actually driving the load, each with the offending span quoted from your own text.';
+  const M=[];
+  if(el){
+    M.push(['Ονοματοποίηση',fmt(A.nominalisationPer100)+'<span style="font-size:13px"> /100</span>','ουσιαστικοποιημένα ρήματα',A.nominalisationPer100>=7]);
+    M.push(['Γενική',A.genitiveDepthMax?('βάθος '+A.genitiveDepthMax):'—',A.genitiveChains+' αλυσίδες',A.genitiveDepthMax>=3]);
+    M.push(['Λόγιες μετοχές',A.logiaCount,'-θείς, -όμενος, -ών',A.logiaCount>=2]);
+  }else{
+    M.push(['Tier‑2 load',fmt(A.tier2Per100)+'<span style="font-size:13px"> /100</span>','connectives &amp; stance',A.tier2Per100>=5]);
+    M.push(['Already owned',A.cognateCount,'Greek‑rooted words',false]);
+    M.push(['False friends',A.falsefriends.length,'confident, invisible errors',A.falsefriends.length>0]);
+  }
+  M.push([el?'Μακρύτερη πρόταση':'Longest sentence',A.longestSentence+(el?' λ.':' w'),
+    fmt(A.meanSentenceWords)+(el?' μέσος όρος':' mean'),A.longestSentence>=30]);
+  M.push([el?'Όροι εντολής':'Command terms',new Set(A.terms.map(t=>t.term)).size,
+    A.terms.length?[...new Set(A.terms.map(t=>t.term))].slice(0,2).join(', '):(el?'κανένας':'none'),false]);
+  $('#metrics').innerHTML=M.map(([k,v,s,hi])=>
+    `<div class="metric${hi?' hi':''}"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
+
+  renderDocView($('#docview'),'read');
+  const F=[];
+  S.blocks.forEach((b,i)=>{
+    (b.a.hits||[]).forEach(h=>{
+      if(!['genitive','logio','falsefriend','register'].includes(h.type))return;
+      F.push({i,h});});
+    if(b.a.longestSentence>=26)F.push({i,h:{type:'long',label:b.a.longestSentence+(el?' λέξεις σε μία πρόταση':' words in one sentence'),text:b.a.longestSentenceText}});
+  });
+  A.terms.forEach(t=>{if(t.lang==='en'&&t.trap)F.push({i:t.bi,h:{type:'trap',label:t.term,text:t.surface,trap:el?t.trap_el:t.trap}});});
+  $('#findcount').textContent=F.length;
+  $('#findings').innerHTML=F.length?F.slice(0,26).map(({i,h})=>{
+    const why={genitive:el?'Τρεις γενικές στη σειρά· ο αναγνώστης κρατά τρεις αναφορές ταυτόχρονα.':'Stacked genitives: three references held at once.',
+      logio:el?'Λόγιος τύπος — απόσταση μητρώου από τον προφορικό λόγο.':'Learned form — register distance from spoken Greek.',
+      long:el?'Πάνω από το όριο εργαζόμενης μνήμης για τη χρονιά.':'Past the working-memory span for this year group.',
+      falsefriend:el?'Ψευδόφιλη λέξη — σταθερό, αόρατο λάθος.':'False friend — a confident, invisible error.',
+      register:el?'Λόγια φράση με απλή εναλλακτική.':'Learned phrasing with a plain alternative.',
+      trap:el?'Παγίδα κατανόησης στην εκφώνηση, όχι αδυναμία σκέψης.':'A comprehension trap in the stem, not weak thinking.'}[h.type]||'';
+    return `<button class="finding" data-jump="read-b${i}">
+      <div class="ft"><span>${esc(h.label||h.type)}</span><em>${esc({genitive:'syntax',logio:'register',long:'wm.verbal',falsefriend:'bridge',register:'register',trap:'command'}[h.type]||'')}</em></div>
+      <div class="fq">“${esc((h.trap?h.text:h.text||'').slice(0,150))}”</div>
+      <div class="fw">${esc(h.trap||why)}</div></button>`;}).join('')
+    :`<div class="empty">Nothing above threshold. This text is already within reach.</div>`;
+}
+function renderRoom(){
+  const el=S.lang==='el',codes=PACK.ontology?.codes||[];
+  const chans=[...new Set(codes.map(c=>c.channel))];
+  const chanName={input:el?'Είσοδος':'Input',language:el?'Γλώσσα':'Language',load:el?'Φόρτος':'Load',
+    executive:el?'Επιτελικές':'Executive',output:el?'Παραγωγή':'Output',affect:el?'Συναίσθημα':'Affect'};
+  let h='';
+  chans.forEach(ch=>{
+    h+=`<div class="chgroup"><h3>${esc(chanName[ch]||ch)}</h3><div class="chips">`;
+    codes.filter(c=>c.channel===ch).forEach(c=>{
+      const key=c.lang_bound?S.lang+':'+c.code:c.code;
+      const sev=S.profile.bar[key]||0;
+      h+=`<button class="chip" data-code="${esc(key)}" aria-pressed="${sev>0}"
+        title="${esc(el?c.question_el:c.question_en)}">${esc(el?c.label_el:c.label_en)}${
+        c.lang_bound?`<span class="lang">${S.lang}</span>`:''}<span class="sev">${sev||1}</span></button>`;});
+    h+='</div></div>';
+  });
+  h+=`<div class="chgroup"><h3>${el?'Δυνατά σημεία — τουλάχιστον ένα':'Strengths — at least one'}</h3>
+      <div class="qline">${el?'Ένα προφίλ που είναι λίστα ελλειμμάτων παράγει έργο ελλειμμάτων.':'A profile that is a list of deficits produces deficit work.'}</div><div class="chips">`;
+  (PACK.ontology?.strengths||[]).forEach(s=>{h+=`<button class="chip strength" data-str="${esc(s.key)}"
+    aria-pressed="${S.profile.str.has(s.key)}">${esc(el?s.label_el:s.label_en)}</button>`;});
+  h+=`</div></div><div class="chgroup"><h3>${el?'Διευκολύνσεις σε ισχύ':'Arrangements in force'}</h3>
+      <div class="qline">${el?'Τικάρετε ό,τι ήδη ισχύει. Τίποτα δεν αποθηκεύεται — ούτε αριθμός πρωτοκόλλου, ούτε ημερομηνία.':'Tick what already applies. Nothing is stored — no protocol number, no date.'}</div><div class="chips">`;
+  (PACK.ontology?.arrangements||[]).forEach(a=>{h+=`<button class="chip arr" data-arr="${esc(a.key)}"
+    aria-pressed="${S.profile.arr.has(a.key)}">${esc(el?a.label_el:a.label_en)}<span class="lang">${esc(a.authority)}</span></button>`;});
+  h+='</div></div>';
+  $('#chipboard').innerHTML=h;
+  updateGate();
+}
+function updateGate(){
+  const el=S.lang==='el';
+  const nb=Object.values(S.profile.bar).filter(x=>x>0).length, ns=S.profile.str.size;
+  $('#gate').innerHTML=ns?
+    `<div class="gate" style="background:var(--legal-soft);border-color:var(--legal)">
+      <b>${nb}</b> ${el?'φραγμοί':'barriers'} · <b>${ns}</b> ${el?'δυνατά σημεία':'strengths'} — ${el?'έτοιμο.':'ready.'}</div>`
+    :`<div class="gate">${el?'Σημειώστε τουλάχιστον ένα δυνατό σημείο για να συνεχίσετε.':'Tick at least one strength to continue.'}</div>`;
+  $('#toplan').disabled=!(ns>0&&nb>0);
+  const warns=[];
+  (PACK.ontology?.arrangements||[]).forEach(a=>{
+    if(!S.profile.arr.has(a.key))return;
+    (a.contraindicated_for||[]).forEach(code=>{
+      const on=Object.keys(S.profile.bar).some(k=>k.endsWith(code)&&S.profile.bar[k]>0);
+      if(on)warns.push(`<b>${esc(el?a.label_el:a.label_en)}</b> — ${esc(el?(a.contraindication_note_el||a.contraindication_note_en):(a.contraindication_note_en||a.contraindication_note_el))}`);});});
+  $('#arrwarn').innerHTML=warns.map(w=>`<div class="warnbox">${w}</div>`).join('');
+}
+
+function renderPlan(){
+  const el=S.lang==='el';
+  $('#planmeta').textContent=`${S.pack==='ib_myp'?'MYP':'Γυμνάσιο'} · ${S.mode.replace('_',' ')} · ${S.strands.map(s=>s.strand_id).join(', ')||'—'}`;
+  $('#cmoves').textContent=S.moves.length;$('#crefs').textContent=S.refusals.length;
+  renderDocView($('#planview'),'plan');
+  const tab=$('#plantabs .tab[aria-selected="true"]').dataset.t;
+  $('#railtitle').textContent=tab==='moves'?(el?'Προτεινόμενες κινήσεις':'Proposed moves'):(el?'Τι αρνήθηκα, και γιατί':'What I refused, and why');
+  $('#acceptall').style.display=tab==='moves'?'':'none';
+  if(tab==='moves'){
+    $('#movelist').innerHTML=S.moves.length?S.moves.map((m,i)=>{
+      const c=m.card,free=c.execution_kind==='render'||c.execution_kind==='deterministic';
+      const q=quoteFor(m);
+      return `<div class="move${m.decision==='reject'?' rejected':''}">
+        <div class="move-h"><b>${esc(el?c.name_el:c.name_en)}</b>
+          <span class="tag${free?' free':''}">${free?(el?'0 tokens':'free'):c.execution_kind}</span></div>
+        <p>${esc(el?c.what_it_does_el:c.what_it_does_en)}</p>
+        ${q?`<div class="quoted">“${esc(q)}”</div>`:''}
+        <div class="why"><b>${esc(m.fired.join(', '))}</b> ${el?'σε':'meets'} <b>${esc(m.dhit.join(', ')||'—')}</b><br>
+          ${esc(c.evidence)} · ${esc(c.evidence_note)}<br>
+          <span class="pill ${m.verdict.verdict}">${m.verdict.verdict}</span>
+          ${m.verdict.matched?esc(m.verdict.strand_id):(el?'χωρίς καταγεγραμμένη κρίση':'no verdict on record')}</div>
+        <div class="move-a">
+          <button class="acc" data-acc="${i}" aria-pressed="${m.decision==='accept'}">${el?'Δέχομαι':'Accept'}</button>
+          <button class="rej" data-rej="${i}" aria-pressed="${m.decision==='reject'}">${el?'Όχι':'No'}</button>
+        </div></div>`;}).join('')
+      :`<div class="empty">${el?'Καμία κίνηση δεν πυροδοτήθηκε. Σημειώστε περισσότερους φραγμούς, ή το κείμενο είναι ήδη προσβάσιμο.':'No move fired. Either tick more barriers, or this text is already within reach.'}</div>`;
+  }else{
+    $('#movelist').innerHTML=S.refusals.length?S.refusals.map((m,i)=>{
+      const c=m.card;
+      return `<div class="refusal">
+        <div class="rh">✕ ${el?'Άρνηση':'Refused'}</div>
+        <div class="rt">${esc(el?c.name_el:c.name_en)}</div>
+        <div class="rr">${esc(el?(m.verdict.rationale_el||m.verdict.rationale_en):m.verdict.rationale_en)}</div>
+        <div class="rmeta">${esc(m.verdict.strand_id||'—')} · ${esc(S.mode)} · ${esc(c.id)}</div>
+        ${c.never_override
+          ?`<div class="never">${el?'Χωρίς παράκαμψη. Το μόνο απόλυτο του συστήματος.':'No override. The only absolute in this system.'}</div>`
+          :`<button class="override" data-ov="${i}">${el?'Το παρακάμπτω — γράφω τον λόγο':'Override — and type my reason'}</button>
+            <div class="ovform" hidden><input placeholder="${el?'Γιατί είναι νόμιμο εδώ;':'Why is this legal here?'}">
+            <button class="btn sm" data-ovsave="${i}" style="width:100%">${el?'Καταχώριση':'Record it'}</button></div>`}
+      </div>`;}).join('')
+      :`<div class="empty">${el?'Τίποτα δεν αρνήθηκε.':'Nothing refused.'}</div>`;
+  }
+}
+function quoteFor(m){
+  const A=S.analysis,k=kindOf(m.card);
+  if(k==='split')return (A.longestSentenceText||'').slice(0,160);
+  if(k==='register')return A.registerPairs[0]?.text||'';
+  if(k==='terms')return A.terms[0]?.surface||'';
+  if(k==='friends')return A.falsefriends[0]?.text||'';
+  if(k==='cognates')return A.cognates.slice(0,5).map(c=>c.text).join(', ');
+  if(k==='actors')return A.entities.slice(0,4).join(' · ');
+  if(k==='timeline')return A.dates.join(' · ');
+  for(const b of S.blocks){const g=(b.a.hits||[]).find(h=>h.type==='genitive'||h.type==='nominalisation');
+    if(g)return g.text.slice(0,140);}
+  return (S.blocks.find(b=>b.kind==='source')?.text||'').slice(0,140);
+}
+function renderOut(){
+  const el=S.lang==='el',teacher=S.view==='teacher',d=renderDirectives();
+  const acc=S.moves.filter(m=>m.decision==='accept');
+  const anchor=bestAnchor();
+  const colo=acc.some(m=>kindOf(m.card)==='colometry');
+  let h=`<h1>${esc(S.title||(el?'Φύλλο εργασίας':'Worksheet'))}</h1>
+    <div class="meta">${teacher?(el?'ΑΝΤΙΤΥΠΟ ΕΚΠΑΙΔΕΥΤΙΚΟΥ':'TEACHER COPY'):(el?'Φύλλο εργασίας':'Worksheet')}
+      ${teacher?' · '+esc(S.handle||'—')+' · '+esc(S.mode):''}</div>`;
+  const style=d.spacing?' style="letter-spacing:.035em;word-spacing:.14em;line-height:2;max-width:52ch"':'';
+  S.blocks.forEach((b,i)=>{
+    if(colo&&b.kind==='source'){
+      h+=`<div class="colo"${style}>${colometrise(nfc(b.text)).map(p=>`<span>${esc(p)}</span>`).join('')}</div>`;
+    }else{
+      h+=`<p class="blk" data-kind="${b.kind}"${style}>${esc(nfc(b.text))}</p>`;
+    }
+    if(i===anchor)acc.forEach(m=>{h+=genScaffold(m);});
+  });
+  if(teacher){
+    h+=`<div class="teacher-only"><div class="tt">${el?'Τι προστέθηκε και γιατί':'What was added, and why'}</div>`;
+    acc.forEach(m=>{h+=`<div style="margin-bottom:7px"><b>${esc(el?m.card.name_el:m.card.name_en)}</b> —
+      ${esc(m.fired.join(', '))} · ${esc(m.card.fade_class)} · ${esc(m.card.evidence)}
+      <span class="pill ${m.verdict.verdict}">${m.verdict.verdict}</span><br>
+      <span style="color:var(--ink-3)">${esc(m.card.evidence_note)}</span></div>`;});
+    h+='</div>';
+    if(S.refusals.length){
+      h+=`<div class="teacher-only" style="border-color:var(--rubric)"><div class="tt" style="color:var(--rubric)">${el?'Τι αρνήθηκα':'What I refused'}</div>`;
+      S.refusals.forEach(m=>{h+=`<div style="margin-bottom:7px"><b>${esc(el?m.card.name_el:m.card.name_en)}</b> —
+        ${esc(el?(m.verdict.rationale_el||m.verdict.rationale_en):m.verdict.rationale_en)}</div>`;});
+      h+='</div>';
+    }
+    const arrs=[...S.profile.arr];
+    if(arrs.length){
+      h+=`<div class="teacher-only"><div class="tt">${el?'Διευκολύνσεις σε ισχύ':'Arrangements in force'}</div><ul style="margin:0;padding-left:18px">`;
+      arrs.forEach(k=>{const a=(PACK.ontology?.arrangements||[]).find(x=>x.key===k);
+        if(a)h+=`<li>${esc(el?a.label_el:a.label_en)} <span style="color:var(--ink-3)">(${esc(a.authority)})</span></li>`;});
+      h+='</ul></div>';
+    }
+  }
+  h+=`<div class="footerline">${el?'Προσαρμοσμένο με τη Δίοδο · περιεχόμενο προστέθηκε αυτόματα, εγκρίθηκε από τον εκπαιδευτικό':'Adapted with Δίοδος · content added automatically, approved by the teacher'}</div>`;
+  $('#outview').innerHTML=h;
+}
+function renderReference(){
+  const r=$('#reftabs .tab[aria-selected="true"]').dataset.r,el=S.lang==='el';
+  const T=(head,rows)=>`<div class="wrap-x"><table class="ref"><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
+  let h='';
+  if(r==='verdicts'){
+    const rows=(PACK.verdicts?.rows||[]).map(x=>`<tr><td><code style="font-family:var(--f-mono);font-size:11.5px">${esc(x.strategy_id)}</code></td>
+      <td>${esc(x.strand_id)}</td><td>${esc(x.assessed_verb)}</td>
+      <td><span class="pill ${esc(x.verdict)}">${esc(x.verdict)}</span></td>
+      <td style="max-width:44ch">${esc(x.rationale_en)}</td></tr>`).join('');
+    h=`<p class="lede">The same move flips between strands. That is the entire product, and no diagnosis and no prompt can tell you which way.</p>`+
+      T(['Strategy','Strand','Verb','Verdict','Rationale — our words, never IB’s'],rows);
+  }else if(r==='terms'){
+    const en=(PACK.terms?.en||[]).map(x=>`<tr><td><b>${esc(x.term)}</b></td><td style="font-family:var(--f-mono)">${x.rank}</td>
+      <td>${esc(x.el_gloss)}</td><td style="max-width:34ch">${esc(x.examiner_wants)}</td>
+      <td style="max-width:30ch;color:var(--rubric)">${esc(x.trap||'')}</td></tr>`).join('');
+    const gr=(PACK.terms?.el||[]).map(x=>`<tr><td><b>${esc(x.term)}</b></td><td style="font-family:var(--f-mono)">${x.rank}</td>
+      <td>${esc(x.en_pair)}</td><td style="max-width:44ch">${esc(x.examiner_wants_el)}</td><td></td></tr>`).join('');
+    h=`<p class="lede">A Greek L1 student reads “to what extent” as a yes/no question, answers it competently as one, and loses Criterion D. That is a comprehension failure in the stem, not weak thinking. Costs zero tokens to fix.</p>`+
+      T(['Term','Rank','Greek','What the examiner wants','The trap'],en+gr);
+  }else if(r==='ff'){
+    h=`<p class="lede">Confident, invisible, repeated. Nobody diagnoses these because the student obviously understands the content.</p>`+
+      T(['English','Read as','Which means','Actually means','Correct Greek','Costs'],
+      (PACK.bridge?.false_friends||[]).map(x=>`<tr><td><b>${esc(x.en)}</b></td><td>${esc(x.misread_as)}</td>
+        <td style="color:var(--ink-3)">${esc(x.misread_means)}</td><td>${esc(x.actual_sense)}</td>
+        <td><b>${esc(x.el_correct)}</b></td><td style="font-size:11.5px">${esc(x.strand_risk)}</td></tr>`).join(''));
+  }else if(r==='cog'){
+    h=`<p class="lede">MYP humanities terminology is largely Greco‑Latinate and already owned. The value is the <em>partial</em> flag, not the translation.</p>`+
+      T(['English','Greek','Transparency','Warning'],
+      (PACK.bridge?.cognates||[]).map(x=>`<tr><td><b>${esc(x.en)}</b></td><td>${esc(x.el)}</td>
+        <td><span class="pill ${x.transparency==='full'?'legal':'conditional'}">${esc(x.transparency)}</span></td>
+        <td style="max-width:48ch">${esc(x.warn||'')}</td></tr>`).join(''));
+  }else if(r==='cards'){
+    h=`<p class="lede">Sixteen cards. The ones marked <b>free</b> cost no model tokens, are always correct, and ship first.</p>`+
+      T(['Card','Answers','Subjects','Kind','Evidence'],
+      (PACK.cards?.cards||[]).map(x=>`<tr><td><b>${esc(x.name_en)}</b><br><span style="font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3)">${esc(x.id)}</span></td>
+        <td style="font-family:var(--f-mono);font-size:11px">${esc((x.targets||[]).join(' '))}</td>
+        <td style="font-size:11.5px">${esc((x.subjects||[]).join(', '))}</td>
+        <td><span class="tag${['render','deterministic'].includes(x.execution_kind)?' free':''}">${['render','deterministic'].includes(x.execution_kind)?'free':esc(x.execution_kind)}</span></td>
+        <td style="max-width:40ch"><b>${esc(x.evidence)}</b> — ${esc(x.evidence_note)}</td></tr>`).join(''));
+  }else{
+    h=`<p class="lede">Teachers ask for all three. The honest answer is a feature, not an omission.</p>`+
+      T(['Claim','Grade','Evidence','Do this instead'],
+      (PACK.cards?.refused_always||[]).map(x=>`<tr><td><b>${esc(x.claim)}</b></td>
+        <td><span class="pill ${x.grade==='contraindicated'?'invalidating':'conditional'}">${esc(x.grade)}</span></td>
+        <td style="max-width:34ch;color:var(--ink-3)">${esc(x.citation)}</td>
+        <td style="max-width:40ch">${esc(x.instead_en)}</td></tr>`).join(''));
+  }
+  $('#refbody').innerHTML=h;
+}
+
+/* ---------- 9. wiring ---------- */
+let cur=0;
+function go(n){
+  $$('.panel').forEach(p=>p.classList.remove('on'));
+  $('#p'+n).classList.add('on');
+  $$('#steps .step').forEach(b=>{const i=+b.dataset.go;
+    b.setAttribute('aria-current',String(i===n));b.classList.toggle('done',i<n&&n<9);});
+  cur=n;window.scrollTo({top:0,behavior:'smooth'});
+  if(n===1)renderRead();if(n===2)renderRoom();if(n===3){buildPlan();renderPlan();}
+  if(n===4)renderOut();if(n===9)renderReference();
+}
+function unlock(){$$('#steps .step').forEach(b=>{if(+b.dataset.go<=4)b.disabled=false;});}
+function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;
+  document.body.appendChild(t);setTimeout(()=>t.remove(),2600);}
+function loadBlocks(blocks,title){
+  S.blocks=blocks;S.title=title||'';S.docx=S.docx&&S.docx.blocks===blocks?S.docx:S.docx;
+  analyseDoc();unlock();
+  $('#dldocx').disabled=!S.docx;
+  $('#docxnote').textContent=S.docx
+    ?'Your original .docx with the scaffolds inserted in place — your header, your logo, your tables, your fonts.'
+    :'Available when you open a .docx. Pasted text has no document to give back.';
+  go(1);
+}
+$('#pick').onclick=()=>$('#file').click();
+$('#file').onchange=e=>{if(e.target.files[0])openFile(e.target.files[0]);};
+const drop=$('#drop');
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('hot');}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('hot');}));
+drop.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)openFile(f);});
+async function openFile(f){
+  if(!/\.docx$/i.test(f.name)){toast('A .docx, please — a PDF or a scan has no paragraphs to edit in place.');return;}
+  try{
+    const d=await readDocx(f);
+    if(!d.blocks.length){toast('No body paragraphs found. If the whole worksheet is in text boxes, paste the text instead.');return;}
+    S.docx=d;
+    const notes=[];
+    if(d.feats.textboxes)notes.push(d.feats.textboxes+' text box(es)');
+    if(d.feats.equations)notes.push('equations');
+    if(d.feats.contentControls)notes.push('content controls');
+    if(d.feats.tracked)notes.push('tracked changes');
+    loadBlocks(d.blocks,f.name.replace(/\.docx$/i,''));
+    if(notes.length)toast('Body read. I can’t reach: '+notes.join(', ')+'.');
+  }catch(err){toast('Could not read that file: '+err.message);}
+}
+$('#usepaste').onclick=()=>{
+  const t=$('#paste').value.trim();if(!t){toast('Nothing to analyse.');return;}
+  S.docx=null;
+  const blocks=t.split(/\n{1,}/).map(x=>x.trim()).filter(Boolean)
+    .map((text,i)=>({text,kind:guessKind(text,i)}));
+  loadBlocks(blocks,'');
+};
+$('#clearpaste').onclick=()=>{$('#paste').value='';};
+$('#pack').onclick=e=>{const b=e.target.closest('button');if(!b)return;
+  $$('#pack button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  S.pack=b.dataset.v;
+  $('#packnote').textContent=S.pack==='ib_myp'
+    ?'MYP binds on construct validity: criterion strands decide what is legal.'
+    :'Γυμνάσιο binds on statute: the ΚΕΔΑΣΥ γνωμάτευση mandates arrangements. Different engine, same analyser.';};
+$('#mode').onclick=e=>{const b=e.target.closest('button');if(!b)return;
+  $$('#mode button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  S.mode=b.dataset.v;
+  $('#modenote').textContent=S.mode==='summative_internal'
+    ?'Summative: an unlisted move fails closed. Override it and your reason becomes the first verdict row.'
+    :'An unlisted move is flagged and proceeds.';};
+$('#subject').onchange=e=>{S.subject=e.target.value;};
+$('#handle').oninput=e=>{S.handle=e.target.value;};
+$('#steps').onclick=e=>{const b=e.target.closest('.step');if(b&&!b.disabled)go(+b.dataset.go);};
+$('#tothe-room').onclick=()=>go(2);
+$('#toplan').onclick=()=>go(3);
+$('#toexport').onclick=()=>go(4);
+$('#reference').onclick=()=>go(9);
+$('#findings').onclick=e=>{const b=e.target.closest('[data-jump]');if(!b)return;
+  const el=document.getElementById(b.dataset.jump);if(!el)return;
+  $$('.blk.sel').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');
+  el.scrollIntoView({behavior:'smooth',block:'center'});};
+$('#chipboard').onclick=e=>{
+  const c=e.target.closest('.chip');if(!c)return;
+  if(c.dataset.code){const k=c.dataset.code;const cur=S.profile.bar[k]||0;
+    const next=cur>=3?0:cur+1;if(next)S.profile.bar[k]=next;else delete S.profile.bar[k];
+    c.setAttribute('aria-pressed',String(next>0));c.querySelector('.sev').textContent=next||1;}
+  else if(c.dataset.str){const k=c.dataset.str;
+    S.profile.str.has(k)?S.profile.str.delete(k):S.profile.str.add(k);
+    c.setAttribute('aria-pressed',String(S.profile.str.has(k)));}
+  else if(c.dataset.arr){const k=c.dataset.arr;
+    S.profile.arr.has(k)?S.profile.arr.delete(k):S.profile.arr.add(k);
+    c.setAttribute('aria-pressed',String(S.profile.arr.has(k)));}
+  updateGate();};
+$('#plantabs').onclick=e=>{const b=e.target.closest('.tab');if(!b)return;
+  $$('#plantabs .tab').forEach(x=>x.setAttribute('aria-selected',String(x===b)));renderPlan();};
+$('#reftabs').onclick=e=>{const b=e.target.closest('.tab');if(!b)return;
+  $$('#reftabs .tab').forEach(x=>x.setAttribute('aria-selected',String(x===b)));renderReference();};
+$('#movelist').onclick=e=>{
+  const a=e.target.closest('[data-acc]'),r=e.target.closest('[data-rej]'),
+        o=e.target.closest('[data-ov]'),s=e.target.closest('[data-ovsave]');
+  if(a){S.moves[+a.dataset.acc].decision='accept';renderPlan();}
+  if(r){S.moves[+r.dataset.rej].decision='reject';renderPlan();}
+  if(o){o.nextElementSibling.hidden=!o.nextElementSibling.hidden;o.nextElementSibling.querySelector('input')?.focus();}
+  if(s){const i=+s.dataset.ovsave,inp=s.previousElementSibling;
+    if(!inp.value.trim()){toast('Type why it is legal here. That sentence is the row.');return;}
+    const m=S.refusals.splice(i,1)[0];m.decision='accept';m.overridden=inp.value.trim();
+    S.moves.push(m);toast('Recorded. That is now the first verdict row for this strand.');renderPlan();}};
+$('#acceptall').onclick=()=>{S.moves.forEach(m=>m.decision='accept');renderPlan();};
+$$('[data-view]').forEach(b=>b.onclick=()=>{S.view=b.dataset.view;renderOut();
+  $('#outview').scrollIntoView({behavior:'smooth',block:'start'});});
+$('#printstu').onclick=()=>{S.view='student';renderOut();setTimeout(()=>window.print(),120);};
+$('#printteach').onclick=()=>{S.view='teacher';renderOut();setTimeout(()=>window.print(),120);};
+$('#dldocx').onclick=()=>exportDocx();
+$('#themetog').onclick=()=>{const r=document.documentElement;
+  const now=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  r.setAttribute('data-theme',now==='dark'?'light':'dark');};
+
+/* demos */
+function mountDemos(){
+  const ds=PACK.demos?.documents||[];
+  $('#demos').innerHTML=ds.map((d,i)=>`<button class="demo" data-demo="${i}">
+    <b>${esc(d.lang==='el'?d.title_el:d.title_en)}</b>
+    <span>${esc(d.standards_pack==='ib_myp'?'MYP':'Γυμνάσιο')} · ${esc(d.subject.replace('_',' '))} · ${esc(d.lang.toUpperCase())} · ${esc(d.mode.replace('_',' '))}</span></button>`).join('');
+  $('#demos').onclick=e=>{const b=e.target.closest('[data-demo]');if(!b)return;
+    const d=ds[+b.dataset.demo];S.docx=null;
+    S.pack=d.standards_pack;S.subject=d.subject;S.mode=d.mode;
+    $$('#pack button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===d.standards_pack)));
+    $$('#mode button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===d.mode)));
+    $('#subject').value=d.subject;
+    S.blocks=d.blocks.map(b=>({text:b.text,kind:b.kind}));
+    S.title=d.lang==='el'?d.title_el:d.title_en;
+    analyseDoc();
+    if(d.strand_ids?.length){const all=PACK.verdicts?.strands||[];
+      const pick=all.filter(s=>d.strand_ids.includes(s.strand_id));if(pick.length)S.strands=pick;}
+    unlock();$('#dldocx').disabled=true;
+    $('#docxnote').textContent='Available when you open a .docx. A demo has no document to give back.';
+    go(1);};
+}
+mountDemos();
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,textarea,select'))return;
+  if(e.key==='ArrowRight'&&cur<4&&!$(`#steps .step[data-go="${cur+1}"]`).disabled)go(cur+1);
+  if(e.key==='ArrowLeft'&&cur>0&&cur<9)go(cur-1);});
+</script>
